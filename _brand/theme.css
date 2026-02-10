@@ -1,0 +1,71 @@
+/* css styles */
+.purple {
+  color: #6A1B9A ;
+  font-weight: bold;
+}
+
+/* Change link color */
+a {
+  color: #6A1B9A; /* Replace with your desired color */
+  text-decoration: none; /* Optional: Remove underline */
+  /*font-weight: bold; /* Make text bold */
+}
+
+/* Change link color on hover */
+a:hover {
+  color: #BB74E7; /* Replace with your desired hover color */
+  /*font-weight: bold; /* Make text bold */
+}
+
+h1 {
+  color: #6A1B9A;
+}
+
+h2 {
+  color: #6A1B9A;
+}
+
+h3 {
+  color: #6A1B9A;
+}
+
+h4 {
+  color: #6A1B9A;
+}
+
+/* Center everything in the sidebar header */
+.quarto-sidebar-header {
+  text-align: center;
+}
+
+/* Center the book title text */
+.sidebar-title a {
+  display: block;
+  text-align: center;
+}
+
+/* Center the logo image */
+.quarto-sidebar-logo {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+/* Target the sidebar tools container properly */
+.navbar-tools,
+.sidebar-tools-main {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center;
+  margin-top: 0.5em !important;
+  margin-bottom: 0.5em !important;
+}
+
+/* Remove default left margin if present */
+.navbar-tools a,
+.sidebar-tools-main a {
+  margin-left: 0 !important;
+}
+
+.sidebar-search {
+  margin-top: -0.5em !important;
+}

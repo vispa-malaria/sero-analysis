@@ -1,0 +1,6 @@
+---
+title: "Explore standard curves"
+format: html
+---
+
+How to interrogate standard curves and compare different ones 

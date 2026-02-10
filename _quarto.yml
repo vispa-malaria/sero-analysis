@@ -1,0 +1,63 @@
+project:
+  type: book
+
+book:
+  title: "Serological Data Analysis"
+  author: 
+    - name: "Dionne Argyropoulos, PhD"
+    - orcid: 0000-0002-8068-0215
+    - url: https://github.com/dionnecargy
+  page-navigation: true
+  page-footer: 
+    background: light
+    center: "Copyright 2026, VISPA"
+  # cover-image: _brand/vispa_logo_only.png
+  sidebar:
+    search: true
+    logo:  _brand/vispa_logo_only.png
+    tools:
+      - icon: home
+        href: https://vispa.online/
+      - icon: github
+        href: https://github.com/vispa-malaria
+      - icon: envelope-fill
+        href: https://vispa.online/contact-us/
+  favicon: _brand/vispa_logo_only.png
+  search: true
+  chapters:
+      - index.qmd
+      - code/intro.qmd
+      - part: "Tutorials"
+        chapters: 
+          - code/pvseroapp.qmd
+          - code/pkpvpf.qmd
+          - code/pvldh.qmd
+      # - part: "Pk/Pv/Pf Tutorial"
+      #   chapters: 
+      # - part: "PvLDH Tutorial"
+      #   chapters: 
+      - part: "Data Exploration"
+        chapters:
+          - code/std_curves.qmd
+          - code/mfi_rau.qmd
+          - code/classification.qmd
+  appendices:
+    - code/tools.qmd
+    - code/resources.qmd
+    - code/multi_inputs.qmd
+    - code/FAQs.qmd
+
+bibliography: references.bib
+
+format:
+  html:
+    toc: true
+    number-sections: true
+    self-contained: true
+    theme:
+      light: [cosmo, quarto-ext/bootstrap]
+      dark: [cosmo, _brand/theme-dark.css]
+    css: _brand/theme.css
+
+filters:
+  - iconify
