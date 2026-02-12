@@ -1,12 +1,11 @@
 ---
 title: "FAQs"
 format: html
-editor: visual
 ---
 
-## I have multiple plate layout files. How can I input them? 
+## I have multiple plate layout files. How can I input them?
 
-Use the `getPlateLayout()` function to create a master plate layout file to then input into the other functions in the package! 
+Use the `getPlateLayout()` function to create a master plate layout file to then input into the other functions in the package!
 
 ```{r}
 #| exec: false 
@@ -14,9 +13,9 @@ Use the `getPlateLayout()` function to create a master plate layout file to then
 getPlateLayout("your/folder/with/plate/layouts/")
 ```
 
-Here replace "your/folder/with/plate/layouts/" with the main file that contains your folders. For example, if your folder looks like this: 
+Here replace "your/folder/with/plate/layouts/" with the main file that contains your folders. For example, if your folder looks like this:
 
-```bash
+``` bash
 my_R_project/
 └── raw_data_files/
     ├── plate_1/
@@ -30,7 +29,7 @@ my_R_project/
         └── plate_layout_3.xlsx
 ```
 
-you would write: 
+you would write:
 
 ```{r}
 #| exec: false 
@@ -38,7 +37,7 @@ you would write:
 getPlateLayout("raw_data_files/")
 ```
 
-you could ALSO write: 
+you could ALSO write:
 
 ```{r}
 #| exec: false 
@@ -46,7 +45,7 @@ you could ALSO write:
 getPlateLayout()
 ```
 
-OR: 
+OR:
 
 ```{r}
 #| exec: false

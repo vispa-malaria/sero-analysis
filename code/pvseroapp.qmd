@@ -49,7 +49,9 @@ your_plate_layout <- system.file("extdata", "example_platelayout_1.xlsx", packag
 
 To run your OWN data, follow the code below and uncomment (i.e., remove the hashtags): 
 
-```{r, exec=FALSE, eval=FALSE}
+```{r}
+#| exec: false
+#| eval: false 
 your_raw_data <- c(
   "PATH/TO/YOUR/FILE/plate1.csv",
   "PATH/TO/YOUR/FILE/plate2.csv",
@@ -67,11 +69,10 @@ final_analysis <- runPvSeroPipeline(
   platform = "magpix", 
   location = "ETH", 
   experiment_name = "experiment1", 
-  # std_point = 10,
+  std_point = 10,
   classify = "Yes", 
   algorithm_type = "antibody_model", 
-  # sens_spec = "balanced"
-  sens_spec = "maximised"
+  sens_spec = "balanced"
 )
 ```
 
@@ -133,11 +134,10 @@ no_classification_final_analysis <- runPvSeroPipeline(
   platform = "magpix", 
   location = "ETH", 
   experiment_name = "experiment1", 
-  # std_point = 10,
+  std_point = 10,
   classify = "No", # key if you do NOT want any classification performed i.e., you do not have PvSeroTaT antigens 
   algorithm_type = "antibody_model", 
-  # sens_spec = "balanced"
-  sens_spec = "maximised"
+  sens_spec = "balanced"
 )
 ```
 

@@ -1,6 +1,9 @@
 ---
 title: "Pk/Pv/Pf Serology Tutorial"
 format: html
+execute:
+  exec: false
+  eval: false
 ---
 
 ```{r, include = FALSE}
@@ -133,7 +136,7 @@ results_10stdcurve <- runPlasmoPipeline(
   platform = "magpix",
   plate_layout = your_plate_layout_10std,
   panel = "panel1",
-  std_point = 10, ################################### here make sure you write 10! 
+  std_point = 10, # here make sure you write 10! 
   experiment_name = "10-point standard curve"
 )
 ```

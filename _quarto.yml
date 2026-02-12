@@ -32,10 +32,6 @@ book:
           - code/pvseroapp.qmd
           - code/pkpvpf.qmd
           - code/pvldh.qmd
-      # - part: "Pk/Pv/Pf Tutorial"
-      #   chapters: 
-      # - part: "PvLDH Tutorial"
-      #   chapters: 
       - part: "Data Exploration"
         chapters:
           - code/std_curves.qmd
@@ -45,6 +41,7 @@ book:
     - code/tools.qmd
     - code/resources.qmd
     - code/multi_inputs.qmd
+    # - code/plotting.qmd
     - code/FAQs.qmd
 
 bibliography: references.bib
