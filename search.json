@@ -1,0 +1,216 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Serological Data Analysis",
+    "section": "",
+    "text": "Preface",
+    "crumbs": [
+      "Preface"
+    ]
+  },
+  {
+    "objectID": "index.html#vivax-serology-partnership",
+    "href": "index.html#vivax-serology-partnership",
+    "title": "Serological Data Analysis",
+    "section": "Vivax Serology Partnership",
+    "text": "Vivax Serology Partnership\nA global partnership between academia, biotechnology industry research and development, non-governmental organisations, policy and implementation stakeholder to address a major gap in the diagnosis of Plasmodium viavx infections and accelerate towards elimination.\nFor more information see the VISPA website.",
+    "crumbs": [
+      "Preface"
+    ]
+  },
+  {
+    "objectID": "index.html#purpose-of-this-book",
+    "href": "index.html#purpose-of-this-book",
+    "title": "Serological Data Analysis",
+    "section": "Purpose of This Book",
+    "text": "Purpose of This Book\nThis book aims to provide a step-by-step tutorial on how to analyse serology data, with a particular focus on our Plasmodium vivax serology test and treat (PvSeroTAT) strategy.",
+    "crumbs": [
+      "Preface"
+    ]
+  },
+  {
+    "objectID": "index.html#serotrackr",
+    "href": "index.html#serotrackr",
+    "title": "Serological Data Analysis",
+    "section": "SeroTrackR",
+    "text": "SeroTrackR\n{SeroTrackR} is a tool to for serology data analysis and visualisation, and for the application of the machine learning algorithms implemented in the {PvSeroApp}. The R package is intended to give users more flexibility in assessing serology data and manipulate data visualisations to the user’s interest. You can download the R package using the following:\n\n# Run once to configure your package to use and deploy SeroTrackR\nif(!require(devtools)){\n  install.packages(\"devtools\") # If not already installed\n} \ndevtools::install_github(\"dionnecargy/SeroTrackR\")\nlibrary(SeroTrackR)\n\nAlternatively you can download the package from the {remotes} R package:\n\nif(!require(remotes)){\n  install.packages(\"remotes\") # If not already installed\n} \nlibrary(remotes)\nremotes::install_github(\"dionnecargy/SeroTrackR\")",
+    "crumbs": [
+      "Preface"
+    ]
+  },
+  {
+    "objectID": "code/intro.html",
+    "href": "code/intro.html",
+    "title": "Before You Begin",
+    "section": "",
+    "text": "File Name Convention\nThe following files are required for this app. You might like to organise your folder as follows:",
+    "crumbs": [
+      "Before You Begin"
+    ]
+  },
+  {
+    "objectID": "code/intro.html#file-name-convention",
+    "href": "code/intro.html#file-name-convention",
+    "title": "Before You Begin",
+    "section": "",
+    "text": "my_R_project\n└── raw_data_files/\n    ├── raw_MAGPIX_data/\n    │   ├── raw_data_plate1.csv\n    │   ├── raw_data_plate2.csv\n    │   └── raw_data_plate3.csv\n    ├── raw_BioPlex_data/\n    │   ├── raw_data_plate4.xlsx\n    │   ├── raw_data_plate5.xlsx\n    │   └── raw_data_plate6.xlsx\n    ├── platelayout.xlsx\n    └── outputs/\n\nRaw Data Files\nThe raw data files should all contain “plate1”, “plate2”, “plate3”, etc., in the file name. Ensure there are no special characters or spaces between the “plate” and number. To keep things simple, please also do not write any leading 0’s before the number e.g., do not write “plate01”.\nFor the MAGPIX and Intelliflex Machines:\nYou can pre-program the MAGPIX machine so that you can export all the raw data directly from the machine once the plate reading is completed. There is no need to edit the raw data file that comes from the MAGPIX.\nWithin your plate layout in the MAGPIX, you can use the “U” button for all unknown samples, “B” button for Background or Blank samples, and “S” for Standard Curve samples. For the control wells, please feel free to edit these labels so that the ID is just “B”, “S1”, “S2”, “S3”….”S10”.\nYou can also write in the Operator i.e., who ran the assay! This is useful to track variation in plates between experiments.\n\nFor the Bioplex Machines:\nIsolate names will tend to be written as ‘X1’, ‘X2’, ‘X3’… and saved as an .xlsx file. Specifics on Bio-Plex machines will be added shortly.\n\n\n\nPlate Layout File\nThe plate layout file should contain all of the plate layouts in each tab. For each 96-well plate that you run on the Luminex machine, prepare a plate layout that includes the sample labels that will match your raw data. The application will match the raw data to the corresponding sample based on the plate layout that you import.\nMake sure that your sample labels in the plate layout are as follows:\n\nStandards: Labels start with “S” and then a number as required (e.g. S1, S2, S3 or Standard1, Standard2, Standard3).\nBlanks: Labels start with “B” and then a number as required if there is more than one blank sample (.e.g ‘B1’, ‘B2’, or ‘Blank 1’, ‘Blank2’ etc).\nUnknown Samples: Label your unknown samples according to your specific sample codes (e.g. ABC001, ABC002).\n\nThe package expects standards to start with “S” and blanks to start with “B”, but everything else with a label will be considered an unknown sample. If you have other types of samples, for example a positive control, you can use a different sample label to the other unknown study samples (i.e. “PositiveControl” in addition to the “ABC” study codes).\n\nThe standards S1-10 correspond to the following dilution concentrations:\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nS1\nS2\nS3\nS4\nS5\nS6\nS7\nS8\nS9\nS10\n\n\n\n\n1/50\n1/100\n1/200\n1/400\n1/800\n1/1600\n1/3200\n1/6400\n1/12800\n1/25600\n\n\n\nThe standards S1-5 correspond to the following dilution concentrations:\n\n\n\nS1\nS2\nS3\nS4\nS5\n\n\n\n\n1/50\n1/250\n1/1250\n1/6250\n1/31250",
+    "crumbs": [
+      "Before You Begin"
+    ]
+  },
+  {
+    "objectID": "code/pvseroapp.html",
+    "href": "code/pvseroapp.html",
+    "title": "1  PvSeroApp in R Tutorial",
+    "section": "",
+    "text": "1.1 Data Analysis: runPvSeroPipeline()\nRun this global function runPvSeroPipeline() embedded within the {SeroTrackR} R package! This function contains all of the steps in order of how to perform the Plasmodium vivax serology test and treat protocol as found in our application!",
+    "crumbs": [
+      "Tutorials",
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>PvSeroApp in R Tutorial</span>"
+    ]
+  },
+  {
+    "objectID": "code/pvseroapp.html#data-analysis-runpvseropipeline",
+    "href": "code/pvseroapp.html#data-analysis-runpvseropipeline",
+    "title": "1  PvSeroApp in R Tutorial",
+    "section": "",
+    "text": "1.1.1 Visualisation of the PvSeroApp Pipeline\n\n\n\n1.1.2 Using Tutorial Dataset: Load the Data\nWe will be using the build-in files in the R package for this tutorial, as shown below.\n\nlibrary(SeroTrackR)\nlibrary(tidyverse)\n\nyour_raw_data &lt;- c(\n  system.file(\"extdata\", \"example_MAGPIX_plate1.csv\", package = \"SeroTrackR\"),\n  system.file(\"extdata\", \"example_MAGPIX_plate2.csv\", package = \"SeroTrackR\"), \n  system.file(\"extdata\", \"example_MAGPIX_plate3.csv\", package = \"SeroTrackR\")\n)\nyour_plate_layout &lt;- system.file(\"extdata\", \"example_platelayout_1.xlsx\", package = \"SeroTrackR\")\n\nTo run your OWN data, follow the code below and uncomment (i.e., remove the hashtags):\n\nyour_raw_data &lt;- c(\n  \"PATH/TO/YOUR/FILE/plate1.csv\",\n  \"PATH/TO/YOUR/FILE/plate2.csv\",\n  \"PATH/TO/YOUR/FILE/plate3.csv\"\n)\nyour_plate_layout &lt;- \"PATH/TO/YOUR/FILE/plate_layout.xlsx\"\n\n\n\n1.1.3 Run Classification: Yes\n\nfinal_analysis &lt;- runPvSeroPipeline(\n  raw_data = your_raw_data, \n  plate_layout = your_plate_layout, \n  platform = \"magpix\", \n  location = \"ETH\", \n  experiment_name = \"experiment1\", \n  std_point = 10,\n  classify = \"Yes\", \n  algorithm_type = \"antibody_model\", \n  sens_spec = \"balanced\"\n)\n#&gt; PASS: File example_magpix_plate1.csv successfully validated.\n#&gt; PASS: File example_magpix_plate2.csv successfully validated.\n#&gt; PASS: File example_magpix_plate3.csv successfully validated.\n#&gt; Plate layouts correctly identified!\n#&gt; QC Processes completed.\n#&gt; MFI to RAU conversion completed.\n#&gt; Please write a standard point curve.\n#&gt; QC Plotting completed.\n#&gt; Pv classification completed.\n\n\n1.1.3.1 Classification\nThis is a table containing the classification results (seropositive or seronegative) for each SampleID. In this case, the classification results are stored in the pred_class_max column as we chose the sens_spec = \"balanced\". If you change it to another type of threshold, then the suffix of that column will change accordingly.\nYou will also see the relative antibody unit (RAU) values (columns with antigen names), whether the sample passed QC check (QC_total) and the plate that they were run on.\n\nfinal_analysis[[1]] %&gt;%\n  head() %&gt;% \n  kable()\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nSampleID\nPlate\nQC_total\nPvEBP\nPv-fam-a\nPvMSP5\nPvMSP1-19\nPvMSP8\nPvPTEX150\nPvCSS\nPvRBP2b\npred_class_max\n\n\n\n\nABC013\nplate1\npass\n0.0003339\n0.0015045\n0.0002163\n0.0014567\n0.0000195\n0.0001591\n0.0000772\n0.0003714\nseropositive\n\n\nABC097\nplate2\npass\n0.0004324\n0.0015615\n0.0001944\n0.0013373\n0.0000195\n0.0001549\n0.0000705\n0.0009189\nseropositive\n\n\nABC181\nplate3\npass\n0.0003822\n0.0015832\n0.0002144\n0.0013711\n0.0000195\n0.0001582\n0.0000710\n0.0002070\nseropositive\n\n\nABC022\nplate1\npass\n0.0200000\n0.0200000\n0.0007373\n0.0194885\n0.0006247\n0.0003145\n0.0006008\n0.0004895\nseropositive\n\n\nABC106\nplate2\npass\n0.0057123\n0.0193731\n0.0007458\n0.0195240\n0.0006263\n0.0003077\n0.0006480\n0.0126203\nseropositive\n\n\nABC190\nplate3\npass\n0.0098260\n0.0200000\n0.0007400\n0.0200000\n0.0006020\n0.0003171\n0.0006555\n0.0175253\nseropositive\n\n\n\n\n\n\n\n1.1.3.2 Standard Curve Plot\nThe standard curve plots are generated from the antibody data from the standards you indicated in your plate layout (e.g. S1-S10) and Median Fluorescent Intensity (MFI) units are displayed in log10-scale. In the case of the PvSeroTaT multi-antigen panel, the antigens will be displayed and in general your standard curves should look relatively linear (only when the y-axis is on logarithmic scale).\n\nfinal_analysis[[2]]\n#&gt; NULL\n\n\n\n1.1.3.3 Bead Counts QC Plot\nA summary of the bead counts for each plate well are displayed, with blue indicating there are sufficient beads (≥15) or red when there are not enough. If any of the wells are red, they should be double-checked manually and re-run on a new plate if required.\nThe function will inform you whether there are “No repeats necessary” or provide a list of samples to be re-run. In the example data, the beads in plate 2 wells A1 and A2 will need to be repeated\n\nfinal_analysis[[3]] # Plot\n\n\n\n\n\n\n\nfinal_analysis[[4]] # Samples to repeat \n#&gt; # A tibble: 2 × 4\n#&gt;   Location SampleID Plate  QC   \n#&gt;   &lt;chr&gt;    &lt;chr&gt;    &lt;chr&gt;  &lt;chr&gt;\n#&gt; 1 A1       Blank1   plate2 fail \n#&gt; 2 A2       Blank2   plate2 fail\n\n\n\n1.1.3.4 Blanks QC Plot\nThe Median Fluorescent Intensity (MFI) units for each antigen is displayed for your blank samples. In general, each blank sample should have ≤50 MFI for each antigen, if they are higher they should be cross-checked manually.\nIn the example data, blank samples recorded higher MFI values for LF005 on plate 1 and should be checked to confirm this is expected from the assay.\n\nfinal_analysis[[5]]\n\n\n\n\n\n\n\n\n\n\n1.1.3.5 Model Output Plot\nThe automated data processing in this app allows you to convert your Median Fluorescent Intensity (MFI) data into Relative Antibody Units (RAU) by fitting a 5-parameter logistic function to the standard curve on a per-antigen level. The results from this log-log conversion should look relatively linear for each antigen.\n\nfinal_analysis[[6]]\n#&gt; $`1`\n#&gt; Ignoring unknown labels:\n#&gt; • fill : \"Antigen\"\n\n\n\n\n\n\n\n\n\n\n\n1.1.4 Run Classification: No\n\nno_classification_final_analysis &lt;- runPvSeroPipeline(\n  raw_data = your_raw_data, \n  plate_layout = your_plate_layout, \n  platform = \"magpix\", \n  location = \"ETH\", \n  experiment_name = \"experiment1\", \n  std_point = 10,\n  classify = \"No\", # key if you do NOT want any classification performed i.e., you do not have PvSeroTaT antigens \n  algorithm_type = \"antibody_model\", \n  sens_spec = \"balanced\"\n)\n#&gt; PASS: File example_magpix_plate1.csv successfully validated.\n#&gt; PASS: File example_magpix_plate2.csv successfully validated.\n#&gt; PASS: File example_magpix_plate3.csv successfully validated.\n#&gt; Plate layouts correctly identified!\n#&gt; QC Processes completed.\n#&gt; MFI to RAU conversion completed.\n#&gt; Please write a standard point curve.\n#&gt; QC Plotting completed.\n#&gt; No Classification Performed.\n\n\n1.1.4.1 MFI and RAU Data\n\nno_classification_final_analysis[[1]]  %&gt;%\n  head() %&gt;% \n  kable()\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nSampleID\nPlate\nQC_total\nPvEBP_MFI\nPvEBP_Dilution\nPv-fam-a_MFI\nPv-fam-a_Dilution\nPvMSP5_MFI\nPvMSP5_Dilution\nPvMSP1-19_MFI\nPvMSP1-19_Dilution\nPvMSP8_MFI\nPvMSP8_Dilution\nPvPTEX150_MFI\nPvPTEX150_Dilution\nPvCSS_MFI\nPvCSS_Dilution\nPvRBP2b_MFI\nPvRBP2b_Dilution\n\n\n\n\nABC013\nplate1\npass\n2712\n0.0003339\n1569.0\n0.0015045\n673\n0.0002163\n327\n0.0014567\n182.0\n1.95e-05\n936.0\n0.0001591\n223\n0.0000772\n1068.0\n0.0003714\n\n\nABC014\nplate1\npass\n134\n0.0000216\n378.0\n0.0004204\n117\n0.0000277\n197\n0.0010331\n58.0\n1.95e-05\n122.0\n0.0000225\n93\n0.0000298\n465.5\n0.0001536\n\n\nABC015\nplate1\npass\n182\n0.0000232\n209.0\n0.0002466\n208\n0.0000616\n374\n0.0015985\n221.5\n1.95e-05\n293.0\n0.0000535\n868\n0.0002235\n463.0\n0.0001527\n\n\nABC016\nplate1\npass\n152\n0.0000222\n229.5\n0.0002688\n101\n0.0000244\n89\n0.0005994\n48.0\n1.95e-05\n109.0\n0.0000220\n110\n0.0000383\n591.0\n0.0001989\n\n\nABC017\nplate1\npass\n1135\n0.0001478\n236.0\n0.0002758\n299\n0.0000950\n507\n0.0019840\n209.5\n1.95e-05\n1665.5\n0.0002668\n266\n0.0000893\n671.0\n0.0002277\n\n\nABC018\nplate1\npass\n174\n0.0000229\n395.0\n0.0004370\n175\n0.0000460\n78\n0.0005452\n70.0\n1.95e-05\n294.5\n0.0000537\n92\n0.0000296\n103.0\n0.0000238\n\n\n\n\n\n\n\n1.1.4.2 QC Plots\nRepeat the same steps as above to find the QC plots!\n\n#### Standard Curve Plot\nno_classification_final_analysis[[2]]\n#&gt; NULL\n\n#### Bead Counts QC Plot\nno_classification_final_analysis[[3]] # Plot\n\n\n\n\n\n\n\nno_classification_final_analysis[[4]] # Samples to repeat \n#&gt; # A tibble: 2 × 4\n#&gt;   Location SampleID Plate  QC   \n#&gt;   &lt;chr&gt;    &lt;chr&gt;    &lt;chr&gt;  &lt;chr&gt;\n#&gt; 1 A1       Blank1   plate2 fail \n#&gt; 2 A2       Blank2   plate2 fail\n\n#### Blanks QC Plot\nno_classification_final_analysis[[5]]\n\n\n\n\n\n\n\n\n#### Model Output Plot\nno_classification_final_analysis[[6]]\n#&gt; $`1`\n#&gt; Ignoring unknown labels:\n#&gt; • fill : \"Antigen\"\n\n\n\n\n\n\n\n\n\n\n\n1.1.5 Create a PDF Report\n\nrenderQCReport(\n  your_raw_data, \n  your_plate_layout, \n  \"magpix\", \n  location = \"ETH\",\n  path = \"results/\" # defaults to your current working directory\n)",
+    "crumbs": [
+      "Tutorials",
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>PvSeroApp in R Tutorial</span>"
+    ]
+  },
+  {
+    "objectID": "code/pkpvpf.html",
+    "href": "code/pkpvpf.html",
+    "title": "2  Pk/Pv/Pf Serology Tutorial",
+    "section": "",
+    "text": "For all of these analyses you can run as many plates as you wish.\n\n2.0.1 Visualisation of the Pk/Pv/Pf Pipeline\n\n\nlibrary(SeroTrackR)\nlibrary(tidyverse)\n\n\n\n2.0.2 5-Point Standard Curve\n\n2.0.2.1 Step 1: Load your data!\nFirstly, we will be using our example data that’s in-built in the package. Here replace the system.file() argument with the file path for your package.\n\nyour_raw_data_5std &lt;- c(\n  system.file(\"extdata\", \"example_MAGPIX_pk_5std_plate1.csv\", package = \"SeroTrackR\"),\n  system.file(\"extdata\", \"example_MAGPIX_pk_5std_plate2.csv\", package = \"SeroTrackR\")\n)\nyour_plate_layout_5std &lt;- system.file(\"extdata\", \"example_platelayout_pk_5std.xlsx\", package = \"SeroTrackR\")\n\n\n\n2.0.2.2 Step 2: Read your data and process MFI to RAU\nThis function to (a) process raw Serological data and (b) convert MFI to RAU. The runPlasmoPipeline() function will output three data frames:\n\nAll_Results: All columns of every MFI to RAU conversion\nMFI_RAU: Just the SampleID, Plate, MFI and RAU values per antigen\nMFI_RAU_long: SampleID, Plate, MFI, RAU, Antigen, Species (long-format df)\n\n\nresults_5stdcurve &lt;- runPlasmoPipeline(\n  raw_data = your_raw_data_5std,\n  platform = \"magpix\",\n  plate_layout = your_plate_layout_5std,\n  panel = \"panel1\",\n  std_point = 5, \n  experiment_name = \"5-point standard curve\"\n)\n\n\n2.0.2.2.1 Standard Curve Plot\n\nresults_5stdcurve$std_curve\n\n\n\n2.0.2.2.2 Bead Counts QC Plot\n\nresults_5stdcurve$bead_counts\n\n\n\n2.0.2.2.3 Blanks QC Ploat\n\nresults_5stdcurve$blanks\n\n\n\n2.0.2.2.4 MFI to RAU Tables\nAll results:\n\nresults_5stdcurve$mfi_outputs$All_Results %&gt;%\n  head() %&gt;% \n  kable()\n\nMFI and RAU only:\n\nresults_5stdcurve$mfi_outputs$MFI_RAU %&gt;%\n  head() %&gt;% \n  kable()\n\nMFI and RAU long table:\n\nresults_5stdcurve$mfi_outputs$MFI_RAU_long %&gt;%\n  head() %&gt;% \n  kable()\n\n\n\n\n\n2.0.3 10-Point Standard Curve\nThese steps are very similar to the 5-point standard curve, except where indicated.\n\n2.0.3.1 Step 1: Load your data!\n\nyour_raw_data_10std &lt;- c(\n  system.file(\"extdata\", \"example_MAGPIX_pk_10std_plate1.csv\", package = \"SeroTrackR\"),\n  system.file(\"extdata\", \"example_MAGPIX_pk_10std_plate2.csv\", package = \"SeroTrackR\")\n)\nyour_plate_layout_10std &lt;- system.file(\"extdata\", \"example_platelayout_pk_10std.xlsx\", package = \"SeroTrackR\")\n\n\n\n2.0.3.2 Step 2: Read your data and process MFI to RAU\n\nresults_10stdcurve &lt;- runPlasmoPipeline(\n  raw_data = your_raw_data_10std,\n  platform = \"magpix\",\n  plate_layout = your_plate_layout_10std,\n  panel = \"panel1\",\n  std_point = 10, # here make sure you write 10! \n  experiment_name = \"10-point standard curve\"\n)\n\n\n2.0.3.2.1 Standard Curve Plot\n\nresults_10stdcurve$std_curve\n\n\n\n2.0.3.2.2 Bead Counts QC Plot\n\nresults_10stdcurve$bead_counts\n\n\n\n2.0.3.2.3 Blanks QC Ploat\n\nresults_10stdcurve$blanks\n\n\n\n2.0.3.2.4 MFI to RAU Tables\nAll results:\n\nresults_10stdcurve$mfi_outputs$All_Results %&gt;%\n  head() %&gt;% \n  kable()\n\nMFI and RAU only:\n\nresults_10stdcurve$mfi_outputs$MFI_RAU %&gt;%\n  head() %&gt;% \n  kable()\n\nMFI and RAU long table:\n\nresults_10stdcurve$mfi_outputs$MFI_RAU_long %&gt;%\n  head() %&gt;% \n  kable()",
+    "crumbs": [
+      "Tutorials",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Pk/Pv/Pf Serology Tutorial</span>"
+    ]
+  },
+  {
+    "objectID": "code/pvldh.html",
+    "href": "code/pvldh.html",
+    "title": "3  PvLDH Tutorial",
+    "section": "",
+    "text": "3.1 Data Analysis: LDH\nFor the LDH data analysis, follow the steps below:",
+    "crumbs": [
+      "Tutorials",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>PvLDH Tutorial</span>"
+    ]
+  },
+  {
+    "objectID": "code/pvldh.html#data-analysis-ldh",
+    "href": "code/pvldh.html#data-analysis-ldh",
+    "title": "3  PvLDH Tutorial",
+    "section": "",
+    "text": "3.1.1 Using Tutorial Dataset: Load the Data\nWe will be using the build-in files in the R package for this tutorial, as shown below.\n\nlibrary(SeroTrackR)\nlibrary(tidyverse)\n\nyour_raw_data &lt;- system.file(\"extdata\", \"example_BioPlex_PvLDH_plate1.csv\", package = \"SeroTrackR\")\nyour_plate_layout &lt;- system.file(\"extdata\", \"example_platelayout_1.xlsx\", package = \"SeroTrackR\")\n\nTo run your OWN data, follow the code below and uncomment (i.e., remove the hashtags):\n\nyour_raw_data &lt;- \"PATH/TO/YOUR/FILE/plate1.csv\"\nyour_plate_layout &lt;- \"PATH/TO/YOUR/FILE/plate_layout.xlsx\"\n\n\n\n3.1.2 Run Pipeline\n\nrunLDHpipeline(\n  raw_data = your_raw_data,\n  plate_layout = your_plate_layout,\n  platform = \"bioplex\",                               # Defaults to \"bioplex\" but \"magpix\" also works\n  file_path = NULL                                    # Defaults to current folder/working directory\n)",
+    "crumbs": [
+      "Tutorials",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>PvLDH Tutorial</span>"
+    ]
+  },
+  {
+    "objectID": "code/std_curves.html",
+    "href": "code/std_curves.html",
+    "title": "4  Explore standard curves",
+    "section": "",
+    "text": "How to interrogate standard curves and compare different ones",
+    "crumbs": [
+      "Data Exploration",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Explore standard curves</span>"
+    ]
+  },
+  {
+    "objectID": "code/mfi_rau.html",
+    "href": "code/mfi_rau.html",
+    "title": "5  MFI and RAU plots",
+    "section": "",
+    "text": "Plot and compare MFI and RAU values",
+    "crumbs": [
+      "Data Exploration",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>MFI and RAU plots</span>"
+    ]
+  },
+  {
+    "objectID": "code/classification.html",
+    "href": "code/classification.html",
+    "title": "6  Classification",
+    "section": "",
+    "text": "Code on how to evaluate the classification results of your samples",
+    "crumbs": [
+      "Data Exploration",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Classification</span>"
+    ]
+  },
+  {
+    "objectID": "code/tools.html",
+    "href": "code/tools.html",
+    "title": "Appendix A — tools",
+    "section": "",
+    "text": "B SeroTrackR\n{SeroTrackR} is a tool to for serology data analysis and visualisation, and for the application of the machine learning algorithms implemented in the {PvSeroApp}. The R package is intended to give users more flexibility in assessing serology data and manipulate data visualisations to the user’s interest. You can download the R package using the following:\n# Run once to configure your package to use and deploy SeroTrackR\nif(!require(devtools)){\n  install.packages(\"devtools\") # If not already installed\n} \ndevtools::install_github(\"dionnecargy/SeroTrackR\")\nlibrary(SeroTrackR)\nAlternatively you can download the package from the {remotes} R package:\nif(!require(remotes)){\n  install.packages(\"remotes\") # If not already installed\n} \nlibrary(remotes)\nremotes::install_github(\"dionnecargy/SeroTrackR\")",
+    "crumbs": [
+      "Appendices",
+      "<span class='chapter-number'>A</span>  <span class='chapter-title'>tools</span>"
+    ]
+  },
+  {
+    "objectID": "code/resources.html",
+    "href": "code/resources.html",
+    "title": "Appendix B — resources",
+    "section": "",
+    "text": "B.1 Quarto\nQuarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see https://quarto.org.",
+    "crumbs": [
+      "Appendices",
+      "<span class='chapter-number'>B</span>  <span class='chapter-title'>resources</span>"
+    ]
+  },
+  {
+    "objectID": "code/resources.html#running-code",
+    "href": "code/resources.html#running-code",
+    "title": "Appendix B — resources",
+    "section": "B.2 Running Code",
+    "text": "B.2 Running Code\nWhen you click the Render button a document will be generated that includes both content and the output of embedded code. You can embed code like this:\n\n1 + 1\n\n[1] 2\n\n\nYou can add options to executable code like this\n\n\n[1] 4\n\n\nThe echo: false option disables the printing of code (only output is displayed).",
+    "crumbs": [
+      "Appendices",
+      "<span class='chapter-number'>B</span>  <span class='chapter-title'>resources</span>"
+    ]
+  },
+  {
+    "objectID": "code/multi_inputs.html",
+    "href": "code/multi_inputs.html",
+    "title": "Appendix C — Multiple Luminex data types",
+    "section": "",
+    "text": "Tutorial on how to integrate and process multiple luminex data types using R",
+    "crumbs": [
+      "Appendices",
+      "<span class='chapter-number'>C</span>  <span class='chapter-title'>Multiple Luminex data types</span>"
+    ]
+  },
+  {
+    "objectID": "code/FAQs.html",
+    "href": "code/FAQs.html",
+    "title": "Appendix D — FAQs",
+    "section": "",
+    "text": "D.1 I have multiple plate layout files. How can I input them?\nUse the getPlateLayout() function to create a master plate layout file to then input into the other functions in the package!\ngetPlateLayout(\"your/folder/with/plate/layouts/\")\nHere replace “your/folder/with/plate/layouts/” with the main file that contains your folders. For example, if your folder looks like this:\nyou would write:\ngetPlateLayout(\"raw_data_files/\")\nyou could ALSO write:\ngetPlateLayout()\nOR:\ngetPlateLayout(folder_path = c(\"plate_layout_1.xlsx\", \"plate_layout_2.xlsx\", \"plate_layout_3.xlsx\"))",
+    "crumbs": [
+      "Appendices",
+      "<span class='chapter-number'>D</span>  <span class='chapter-title'>FAQs</span>"
+    ]
+  },
+  {
+    "objectID": "code/FAQs.html#i-have-multiple-plate-layout-files.-how-can-i-input-them",
+    "href": "code/FAQs.html#i-have-multiple-plate-layout-files.-how-can-i-input-them",
+    "title": "Appendix D — FAQs",
+    "section": "",
+    "text": "my_R_project/\n└── raw_data_files/\n    ├── plate_1/\n    │   ├── raw_magpix_data_plate1.csv\n    │   └── plate_layout_1.xlsx\n    ├── plate_2/\n    │   ├── raw_magpix_data_plate2.csv\n    │   └── plate_layout_2.xlsx\n    └── plate_3/\n        ├── raw_magpix_data_plate3.csv\n        └── plate_layout_3.xlsx",
+    "crumbs": [
+      "Appendices",
+      "<span class='chapter-number'>D</span>  <span class='chapter-title'>FAQs</span>"
+    ]
+  }
+]
