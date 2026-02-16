@@ -7,6 +7,7 @@ $navbar-bg: #88398A;
 
 // Code blocks
 $code-block-bg-alpha: -.8;
+$code-bg: rgba($body-bg, $code-block-bg-alpha);
 
 /* Change link color */
 a {
@@ -20,18 +21,6 @@ a:hover {
   color: #CE9BED; /* Replace with your desired hover color */
 }
 
-h1 {
-  color: #9426D9;
-}
-
-h2 {
-  color: #9426D9;
-}
-
-h3 {
-  color: #9426D9;
-}
-
-h4 {
+h1, h2, h3, h4 {
   color: #9426D9;
 }

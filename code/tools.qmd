@@ -1,13 +1,6 @@
----
-title: "tools"
-format: html
-editor: visual
----
+# Tools
 
-# SeroTrackR 
-
-`{SeroTrackR}` is a tool to for serology data analysis and visualisation, and for the application of the machine learning algorithms implemented in the `{PvSeroApp}`. The R package is intended to give users more flexibility in assessing serology data and manipulate data visualisations to the user's interest. 
-You can download the R package using the following: 
+`{SeroTrackR}` is a tool to for serology data analysis and visualisation, and for the application of the machine learning algorithms implemented in the `{PvSeroApp}`. The R package is intended to give users more flexibility in assessing serology data and manipulate data visualisations to the user's interest. You can download the R package using the following:
 
 ``` r
 # Run once to configure your package to use and deploy SeroTrackR
@@ -18,7 +11,7 @@ devtools::install_github("dionnecargy/SeroTrackR")
 library(SeroTrackR)
 ```
 
-Alternatively you can download the package from the `{remotes}` R package: 
+Alternatively you can download the package from the `{remotes}` R package:
 
 ``` r
 if(!require(remotes)){

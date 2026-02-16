@@ -1,7 +1,4 @@
----
-title: "FAQs"
-format: html
----
+# FAQs
 
 ## I have multiple plate layout files. How can I input them?
 
@@ -52,3 +49,8 @@ OR:
 #| eval: false
 getPlateLayout(folder_path = c("plate_layout_1.xlsx", "plate_layout_2.xlsx", "plate_layout_3.xlsx"))
 ```
+
+## I have multiple Luminex data types I'd like to analyse. How can I do this?
+
+Tutorial on how to integrate and process multiple luminex data types using R 
+

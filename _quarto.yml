@@ -16,7 +16,7 @@ book:
     search: true
     logo:  _brand/vispa_logo_only.png
     tools:
-      - icon: home
+      - icon: globe
         href: https://vispa.online/
       - icon: github
         href: https://github.com/vispa-malaria
@@ -40,7 +40,6 @@ book:
   appendices:
     - code/tools.qmd
     - code/resources.qmd
-    - code/multi_inputs.qmd
     # - code/plotting.qmd
     - code/FAQs.qmd
 

@@ -1,6 +1,5 @@
----
-title: "Explore standard curves"
-format: html
----
+# Explore standard curves
 
-How to interrogate standard curves and compare different ones 
+How to interrogate standard curves and compare different ones. 
+
+To be added. 
