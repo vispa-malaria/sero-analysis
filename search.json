@@ -119,7 +119,7 @@
     "href": "code/std_curves.html",
     "title": "4  Explore standard curves",
     "section": "",
-    "text": "How to interrogate standard curves and compare different ones",
+    "text": "How to interrogate standard curves and compare different ones.\nTo be added.",
     "crumbs": [
       "Data Exploration",
       "<span class='chapter-number'>4</span>  <span class='chapter-title'>Explore standard curves</span>"
@@ -150,67 +150,56 @@
   {
     "objectID": "code/tools.html",
     "href": "code/tools.html",
-    "title": "Appendix A — tools",
+    "title": "Appendix A — Tools",
     "section": "",
-    "text": "B SeroTrackR\n{SeroTrackR} is a tool to for serology data analysis and visualisation, and for the application of the machine learning algorithms implemented in the {PvSeroApp}. The R package is intended to give users more flexibility in assessing serology data and manipulate data visualisations to the user’s interest. You can download the R package using the following:\n# Run once to configure your package to use and deploy SeroTrackR\nif(!require(devtools)){\n  install.packages(\"devtools\") # If not already installed\n} \ndevtools::install_github(\"dionnecargy/SeroTrackR\")\nlibrary(SeroTrackR)\nAlternatively you can download the package from the {remotes} R package:\nif(!require(remotes)){\n  install.packages(\"remotes\") # If not already installed\n} \nlibrary(remotes)\nremotes::install_github(\"dionnecargy/SeroTrackR\")",
+    "text": "{SeroTrackR} is a tool to for serology data analysis and visualisation, and for the application of the machine learning algorithms implemented in the {PvSeroApp}. The R package is intended to give users more flexibility in assessing serology data and manipulate data visualisations to the user’s interest. You can download the R package using the following:\n# Run once to configure your package to use and deploy SeroTrackR\nif(!require(devtools)){\n  install.packages(\"devtools\") # If not already installed\n} \ndevtools::install_github(\"dionnecargy/SeroTrackR\")\nlibrary(SeroTrackR)\nAlternatively you can download the package from the {remotes} R package:\nif(!require(remotes)){\n  install.packages(\"remotes\") # If not already installed\n} \nlibrary(remotes)\nremotes::install_github(\"dionnecargy/SeroTrackR\")",
     "crumbs": [
       "Appendices",
-      "<span class='chapter-number'>A</span>  <span class='chapter-title'>tools</span>"
+      "<span class='chapter-number'>A</span>  <span class='chapter-title'>Tools</span>"
     ]
   },
   {
     "objectID": "code/resources.html",
     "href": "code/resources.html",
-    "title": "Appendix B — resources",
+    "title": "Appendix B — Resources",
     "section": "",
-    "text": "B.1 Quarto\nQuarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see https://quarto.org.",
+    "text": "To be added.",
     "crumbs": [
       "Appendices",
-      "<span class='chapter-number'>B</span>  <span class='chapter-title'>resources</span>"
-    ]
-  },
-  {
-    "objectID": "code/resources.html#running-code",
-    "href": "code/resources.html#running-code",
-    "title": "Appendix B — resources",
-    "section": "B.2 Running Code",
-    "text": "B.2 Running Code\nWhen you click the Render button a document will be generated that includes both content and the output of embedded code. You can embed code like this:\n\n1 + 1\n\n[1] 2\n\n\nYou can add options to executable code like this\n\n\n[1] 4\n\n\nThe echo: false option disables the printing of code (only output is displayed).",
-    "crumbs": [
-      "Appendices",
-      "<span class='chapter-number'>B</span>  <span class='chapter-title'>resources</span>"
-    ]
-  },
-  {
-    "objectID": "code/multi_inputs.html",
-    "href": "code/multi_inputs.html",
-    "title": "Appendix C — Multiple Luminex data types",
-    "section": "",
-    "text": "Tutorial on how to integrate and process multiple luminex data types using R",
-    "crumbs": [
-      "Appendices",
-      "<span class='chapter-number'>C</span>  <span class='chapter-title'>Multiple Luminex data types</span>"
+      "<span class='chapter-number'>B</span>  <span class='chapter-title'>Resources</span>"
     ]
   },
   {
     "objectID": "code/FAQs.html",
     "href": "code/FAQs.html",
-    "title": "Appendix D — FAQs",
+    "title": "Appendix C — FAQs",
     "section": "",
-    "text": "D.1 I have multiple plate layout files. How can I input them?\nUse the getPlateLayout() function to create a master plate layout file to then input into the other functions in the package!\ngetPlateLayout(\"your/folder/with/plate/layouts/\")\nHere replace “your/folder/with/plate/layouts/” with the main file that contains your folders. For example, if your folder looks like this:\nyou would write:\ngetPlateLayout(\"raw_data_files/\")\nyou could ALSO write:\ngetPlateLayout()\nOR:\ngetPlateLayout(folder_path = c(\"plate_layout_1.xlsx\", \"plate_layout_2.xlsx\", \"plate_layout_3.xlsx\"))",
+    "text": "C.1 I have multiple plate layout files. How can I input them?\nUse the getPlateLayout() function to create a master plate layout file to then input into the other functions in the package!\ngetPlateLayout(\"your/folder/with/plate/layouts/\")\nHere replace “your/folder/with/plate/layouts/” with the main file that contains your folders. For example, if your folder looks like this:\nyou would write:\ngetPlateLayout(\"raw_data_files/\")\nyou could ALSO write:\ngetPlateLayout()\nOR:\ngetPlateLayout(folder_path = c(\"plate_layout_1.xlsx\", \"plate_layout_2.xlsx\", \"plate_layout_3.xlsx\"))",
     "crumbs": [
       "Appendices",
-      "<span class='chapter-number'>D</span>  <span class='chapter-title'>FAQs</span>"
+      "<span class='chapter-number'>C</span>  <span class='chapter-title'>FAQs</span>"
     ]
   },
   {
     "objectID": "code/FAQs.html#i-have-multiple-plate-layout-files.-how-can-i-input-them",
     "href": "code/FAQs.html#i-have-multiple-plate-layout-files.-how-can-i-input-them",
-    "title": "Appendix D — FAQs",
+    "title": "Appendix C — FAQs",
     "section": "",
     "text": "my_R_project/\n└── raw_data_files/\n    ├── plate_1/\n    │   ├── raw_magpix_data_plate1.csv\n    │   └── plate_layout_1.xlsx\n    ├── plate_2/\n    │   ├── raw_magpix_data_plate2.csv\n    │   └── plate_layout_2.xlsx\n    └── plate_3/\n        ├── raw_magpix_data_plate3.csv\n        └── plate_layout_3.xlsx",
     "crumbs": [
       "Appendices",
-      "<span class='chapter-number'>D</span>  <span class='chapter-title'>FAQs</span>"
+      "<span class='chapter-number'>C</span>  <span class='chapter-title'>FAQs</span>"
+    ]
+  },
+  {
+    "objectID": "code/FAQs.html#i-have-multiple-luminex-data-types-id-like-to-analyse.-how-can-i-do-this",
+    "href": "code/FAQs.html#i-have-multiple-luminex-data-types-id-like-to-analyse.-how-can-i-do-this",
+    "title": "Appendix C — FAQs",
+    "section": "C.2 I have multiple Luminex data types I’d like to analyse. How can I do this?",
+    "text": "C.2 I have multiple Luminex data types I’d like to analyse. How can I do this?\nTutorial on how to integrate and process multiple luminex data types using R",
+    "crumbs": [
+      "Appendices",
+      "<span class='chapter-number'>C</span>  <span class='chapter-title'>FAQs</span>"
     ]
   }
 ]
