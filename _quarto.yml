@@ -50,6 +50,7 @@ format:
     toc: true
     number-sections: true
     self-contained: false
+    page-layout: full
     theme:
       light: [cosmo, quarto-ext/bootstrap]
       dark: [cosmo, _brand/theme-dark.css]
