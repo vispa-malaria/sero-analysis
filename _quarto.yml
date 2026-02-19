@@ -14,6 +14,7 @@ book:
   # cover-image: _brand/vispa_logo_only.png
   sidebar:
     search: true
+    style: docked
     logo:  _brand/vispa_logo_only.png
     tools:
       - icon: globe
@@ -48,13 +49,33 @@ bibliography: references.bib
 format:
   html:
     toc: true
+    toc-location: left
+    toc-depth: 3
+    # toc: true
+    # number-sections: true
+    # self-contained: false
+    # page-layout: full
+    # theme:
+    #   light: [cosmo, quarto-ext/bootstrap]
+    #   dark: [cosmo, _brand/theme-dark.css]
+    # css: _brand/theme.css
+    grid:
+      body-width: 1000px
+      margin-width: 20px
+      sidebar-width: 300px
+    theme: _brand/theme_custom.scss
+    code-fold: false
+    fig-width: 10
+    fig-height: 5
+    fig-dpi: 200
+    code-summary: "Show code"
+    code-tools:
+      source: true
+      toggle: false
+      caption: none
+    code-overflow: wrap
+    highlight-style: _brand/textmate.theme
     number-sections: true
-    self-contained: false
-    page-layout: full
-    theme:
-      light: [cosmo, quarto-ext/bootstrap]
-      dark: [cosmo, _brand/theme-dark.css]
-    css: _brand/theme.css
 
 filters:
   - iconify
