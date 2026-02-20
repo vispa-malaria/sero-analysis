@@ -1,6 +1,6 @@
 /*-- scss:defaults --*/
 
-$theme: "theme_custom" !default;
+$theme: "theme_custom_dark" !default;
 //
 // Color system
 //
@@ -8,7 +8,7 @@ $white:                         #ffffff !default;
 $black:                         #000000 !default;
 
 $blue:                          #237ca8 !default;
-$dark-blue:                     #073b5b !default;
+$light-blue:                    #3db7c3 !default;
 $light-green:                   #94d5b3 !default;
 $green:                         #4eba81 !default;
 $indigo:                        #3f5aa9 !default;
@@ -20,38 +20,38 @@ $yellow:                        #d4c34f !default;
 $teal:                          #2f9e8f !default;
 $cyan:                          #3db7c3 !default;
 
-$white:                         #fff !default;
-$gray-100:                      #f8f9fa !default;
-$gray-200:                      #e9ecef !default;
-$gray-300:                      #ddd !default;
-$gray-400:                      #ced4da !default;
-$gray-500:                      #adb5bd !default;
-$gray-600:                      #868e96 !default;
-$gray-700:                      #495057 !default;
-$gray-800:                      #343a40 !default;
-$gray-900:                      #212529 !default;
-$black:                         #000 !default;
+$gray-100:                      #0f2a3d !default;
+$gray-200:                      #1c3b52 !default;
+$gray-300:                      #24485f !default;
+$gray-400:                      #2e5a74 !default;
+$gray-500:                      #5f7f96 !default;
+$gray-600:                      #7f9bb0 !default;
+$gray-700:                      #a5bdcf !default;
+$gray-800:                      #c7d9e6 !default;
+$gray-900:                      #e6edf3 !default;
 
 $primary:                       $blue !default;
-$secondary:                     $dark-blue !default;
+$secondary:                     $light-blue !default;
 $success:                       $green !default;
 $info:                          $light-green !default;
 $warning:                       $yellow !default;
 $danger:                        $red !default;
+
 $light:                         $white !default;
-$dark:                          #444444 !default;
+$dark:                          #e6edf3 !default;
 
 $min-contrast-ratio:            1.85 !default;
 
 // Body
-$body-color:                    #444444 !default;
+$body-bg:                       #0b1e2d !default;
+$body-color:                    #e6edf3 !default;
 
 // Fonts
 // stylelint-disable value-keyword-case
 $font-family-headings:          "Helvetica Neue", Helvetica, Arial, sans-serif !default;
 $font-family-body:              "Helvetica Neue", Helvetica, Arial, sans-serif !default;
 $font-family-sans-serif:        "Helvetica Neue", Helvetica, Arial, sans-serif;
-$headings-color:                $dark-blue !default;
+$headings-color:                $light-blue !default;
 
 // stylelint-enable
 $font-size-base:                1.1rem !default;
@@ -94,10 +94,10 @@ $badge-padding-x:               1.2em !default;
 $alert-border-width:            0 !default;
 
 // Code
-$code-block-bg:                 rgba($blue, 0.08) !default;
-$mono-background-color:         rgba($blue, 0.08);
-$code-block-border-left:        $blue !default;
-$code-color:                    $body-color;       //this is for the inline code
+$code-block-bg:                 #132b3a !default;
+$mono-background-color:         #132b3a;
+$code-color:                    #94d5b3;
+$code-block-border-left:        #237ca8;
 
 // mermaid theming
 $mermaid-bg-color:              $white;
@@ -118,7 +118,6 @@ $callout-color-note:            $teal !default;
 $callout-color-important:       $purple !default;
 
 /*-- scss:rules --*/
-
 //callouts
 .callout.callout-style-default .callout-icon::before, .callout.callout-style-default .callout-toggle::before{
   background-size: $font-size-base;
@@ -172,36 +171,44 @@ div.callout-important.callout-titled .callout-icon::before{
 }
 
 // code again
-.cell-output > pre { //output of code cells
-  background-color: #f3f3f3;
+/* Output cells */
+.cell-output > pre {
+  background-color: $code-block-bg !important;  // dark background
+  color: $code-color !important;                // light text
 }
 
-p code:not(.sourceCode), li code:not(.sourceCode), td code:not(.sourceCode){
-  background-color: $code-block-bg;
+/* Inline code */
+p code:not(.sourceCode),
+li code:not(.sourceCode),
+td code:not(.sourceCode) {
+  background-color: $mono-background-color !important; // dark inline code bg
+  color: $code-color !important;                        // light text
 }
 
-// filenames for code blocks, so they are a diff colour
+/* Code-with-filename blocks */
 .code-with-filename .code-with-filename-file {
-  background-color: $blue !important;
+  background-color: darken($blue, 10%) !important;     // slightly darker for contrast
+  color: #ffffff !important;
 }
 
-div.code-with-filename-file>pre {
-  background-color: $blue !important;
-  color: white;
+div.code-with-filename-file > pre {
+  background-color: darken($blue, 10%) !important;
+  color: #ffffff !important;
 }
 
 // Navbar
+
 .navbar {
   font-size: 1.0rem;
-  border: 1px solid $white;
+  border: 1px solid #0f2a3d;
 
   &.bg-dark {
-    background-color: $success !important;
+    background-color: #0f2a3d !important;
   }
 
   &.bg-light {
-    background-color: $white !important;
-    border: 1px solid $white;
+    background-color: #0f2a3d !important;
+    border: 1px solid #0f2a3d;
 
     &.navbar-fixed-top {
       border-width: 0 0 1px;
@@ -217,11 +224,32 @@ div.code-with-filename-file>pre {
     color: $body-color;
 }
 
+/* Sidebar background */
+.sidebar {
+  background-color: #0f2a3d !important;
+  border-right: 1px solid #1c3b52;
+}
+
+/* Sidebar links */
+.sidebar .nav-link {
+  color: #cfe6f3;
+}
+
+.sidebar .nav-link.active {
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.sidebar .nav-link:hover {
+  color: #94d5b3;
+}
+
 .header-section-number {
   color: $primary;
 }
 
 // Typography
+
 p {
   font-family: $font-family-body;
 }
@@ -279,6 +307,7 @@ table,
 }
 
 // Navs
+
 .nav,
 .breadcrumb,
 .pagination {
@@ -290,6 +319,7 @@ table,
 }
 
 // Indicators
+
 .alert {
   color: $white;
   font-size: $font-size-sm;
@@ -332,6 +362,7 @@ table,
 }
 
 // Containers
+
 .list-group {
   font-size: $font-size-sm;
 }
