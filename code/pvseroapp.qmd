@@ -23,9 +23,9 @@ setup()
 library(SeroTrackR)
 ```
 
-## Data Analysis: `runPvSeroPipeline()` 
+## Data Analysis: function by function 
 
-Run this global function `runPvSeroPipeline()` embedded within the `{SeroTrackR}` R package! This function contains all of the steps in order of how to perform the *Plasmodium vivax* serology test and treat protocol as found in our [application](https://dionnecargy.shinyapps.io/PvSeroApp/)! 
+We can also run the functions within the `runPvSeroPipeline()` to identify each step independently. This can be useful particularly when modifying graphs or saving files and interrogating the data. 
 
 ### Visualisation of the PvSeroApp Pipeline
 
@@ -33,7 +33,7 @@ Run this global function `runPvSeroPipeline()` embedded within the `{SeroTrackR}
 
 ### Using Tutorial Dataset: Load the Data
 
-We will be using the build-in files in the R package for this tutorial, as shown below. 
+We will be using the build-in files in the R package for this tutorial, as shown here: 
 
 ```{r setup 1}
 library(SeroTrackR)
@@ -47,7 +47,7 @@ your_raw_data <- c(
 your_plate_layout <- system.file("extdata", "example_platelayout_1.xlsx", package = "SeroTrackR")
 ```
 
-To run your OWN data, follow the code below and uncomment (i.e., remove the hashtags): 
+To run your OWN data, follow the code here, replacing PATH/TO/YOUR/FILE with your file path: 
 
 ```{r}
 #| exec: false
@@ -59,6 +59,102 @@ your_raw_data <- c(
 )
 your_plate_layout <- "PATH/TO/YOUR/FILE/plate_layout.xlsx"
 ```
+
+:::{.callout-note}
+#### Data preparation 
+
+Please ensure that you have read and prepared your raw Luminex files and plate layout files as per the instructions in the [Before You Begin](intro.qmd) page. 
+
+:::
+
+### Step 1: Read in the raw data 
+
+You can read any Luminex serology data file using the `readSeroData()` function. 
+
+The Luminex platform can be specified using the `platform` argument, with either `bioplex`, `magpix` or `intelliflex`. 
+
+For the xPONENT software-based exported files (MAGPIX or INTELLIFLEX), the version of the software should be specified as either **"4.2"** or **"4.3"**, with the version **"4.2"** as the default.
+
+```{r}
+sero_data <- readSeroData(
+  raw_data = your_raw_data, 
+  platform = "magpix",        # default 
+  version = "4.2"             # default 
+)
+sero_data
+
+# look up how to how all df's in the results as a kable() 
+```
+::: {.callout-tip}
+#### readSeroData Output
+This exports a list of data frames: 
+
+1. `raw`: The raw, unedited files: A check that the correct file/s were added.
+2. `results`: The processed serological data files: Antigen names compatible with the R package, clear columns for each antigen and their MFI results.
+3. `counts`: The bead counts detected from the Luminex instrument per antigen, per sample, for each plate. 
+4. `blanks`: The MFI results for the blank wells. 
+5. `stds`: The MFI results for the standard curve samples.
+6. `run`: The run information from the Luminex machine. 
+
+You can access each data frame, for example the `results` data frame, like this:
+
+```{r}
+sero_data$results
+```
+
+:::
+
+Next, you need to read in 
+
+```{r}
+plate_list <- readPlateLayout(
+  plate_layout = your_plate_layout, 
+  sero_data  = sero_data
+)
+```
+
+### Step 2: Quality control checks
+
+```{r}
+qc_results  <- runQC(
+  sero_data = sero_data, 
+  plate_list = plate_list
+)
+```
+
+
+```{r}
+stdcurve_plot             <- plotStds(sero_data, location = "PNG", experiment_name = "experiment1")
+plateqc_plot              <- plotCounts(qc_results, experiment_name = "experiment1")
+check_repeats_output      <- getRepeats(qc_results, plate_list)
+blanks_plot               <- plotBlanks(sero_data, experiment_name = "experiment1")
+```
+
+### Step 3: MFI to RAU conversion 
+
+If location == png or if you are not using the Pv classification 
+
+```{r}
+mfi_to_rau_output       <- suppressWarnings(MFItoRAU(sero_data, plate_list, qc_results, std_point = 10, project = NULL))
+model_plot              <- plotModel(mfi_to_rau_output, sero_data)
+```
+
+if location == eth 
+
+```{r}
+mfi_to_rau_output       <- suppressMessages(MFItoRAU_Adj(sero_data, plate_list, qc_results, std_point = 10, project = NULL))
+model_plot              <- plotModel_Adj(mfi_to_rau_output, sero_data)
+```
+
+### Step 4: Classification 
+
+```{r}
+classifyResults_output    <- classifyResults(mfi_to_rau_output, algorithm_type = "antibody_model", sens_spec = "balanced", qc_results, project = NULL)
+```
+
+## Data Analysis: `runPvSeroPipeline()` 
+
+Run this global function `runPvSeroPipeline()` embedded within the `{SeroTrackR}` R package! This function contains all of the steps in order of how to perform the *Plasmodium vivax* serology test and treat protocol as found in our [application](https://dionnecargy.shinyapps.io/PvSeroApp/)! 
 
 ### Run Classification: Yes
 
