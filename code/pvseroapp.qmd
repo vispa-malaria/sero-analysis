@@ -10,7 +10,7 @@ knitr::opts_chunk$set(
 )
 options(rmarkdown.html_vignette.check_title = FALSE)
 setup <- function() {
-  needed <- c("knitr", "rmarkdown", "tidyverse", "kableExtra")
+  needed <- c("knitr", "rmarkdown", "tidyverse", "kableExtra", "purrr")
   
   lapply(needed, function(pkg) {
     if (requireNamespace(pkg, quietly = TRUE)) {
@@ -81,11 +81,33 @@ sero_data <- readSeroData(
   platform = "magpix",        # default 
   version = "4.2"             # default 
 )
-sero_data
-
-# look up how to how all df's in the results as a kable() 
 ```
+
+```{r}
+#| exec: false
+#| eval: false
+sero_data
+```
+
+```{r}
+#| results: asis
+#| echo: false
+
+iwalk(sero_data, function(df, nm) {
+
+  cat("$", nm, "\n\n")
+
+  tbl <- kable(df, format = "html") %>%
+    kable_styling(full_width = TRUE) %>%
+    scroll_box(width = "100%", height = "200px")
+  print(tbl)
+
+  cat("\n\n")
+})
+```
+
 ::: {.callout-tip}
+
 #### readSeroData Output
 This exports a list of data frames: 
 
@@ -99,12 +121,21 @@ This exports a list of data frames:
 You can access each data frame, for example the `results` data frame, like this:
 
 ```{r}
+#| exec: false
+#| eval: false
 sero_data$results
+```
+
+```{r}
+#| echo: false
+sero_data$results %>%
+  kable() %>%
+  scroll_box(width = "100%", height = "200px")
 ```
 
 :::
 
-Next, you need to read in 
+Next, you need to read in the plate layout! This file will allow us to relabel the raw luminex data from "unknowns" to our study Sample ID's. 
 
 ```{r}
 plate_list <- readPlateLayout(
@@ -112,6 +143,47 @@ plate_list <- readPlateLayout(
   sero_data  = sero_data
 )
 ```
+
+```{r}
+#| exec: false
+#| eval: false
+plate_list
+```
+
+<!-- ```{r} -->
+<!-- #| results: asis -->
+<!-- #| echo: false -->
+
+<!-- library(purrr) -->
+<!-- library(knitr) -->
+<!-- library(kableExtra) -->
+
+<!-- iwalk(plate_list, ~{ -->
+<!--   cat(.y, "\n\n") -->
+<!--   cat( -->
+<!--     kable(.x, format = "html") -->
+<!--   ) -->
+<!--   cat("\n\n") -->
+<!-- }) -->
+<!-- ``` -->
+
+```{r}
+#| results: asis
+#| echo: false
+
+iwalk(plate_list, function(df, nm) {
+
+  cat("$", nm, "\n\n")
+
+  tbl <- kable(df, format = "html") %>%
+    kable_styling(full_width = TRUE)
+  print(tbl)
+
+  cat("\n\n")
+})
+```
+
+Great! Now our serological data has been processed and our plate layouts are added into R-compatible data frames ready for analysis! 
 
 ### Step 2: Quality control checks
 
