@@ -52,5 +52,121 @@ getPlateLayout(folder_path = c("plate_layout_1.xlsx", "plate_layout_2.xlsx", "pl
 
 ## I have multiple Luminex data types I'd like to analyse. How can I do this?
 
-Tutorial on how to integrate and process multiple luminex data types using R 
+If you have, for example, both Bio-Plex and MAGPIX files and would like to analyse them both, then you can do some clever data manipulation as below: 
+
+*Note that in this example, there is one plate layout that contains all files in it. But the same idea can apply to `readPlateLayout()`. 
+
+**Input your Bio-Plex file/s**: 
+
+Using a reproducible example: 
+
+```{r}
+#| message: false
+#| warning: false
+library(SeroTrackR)
+library(tidyverse)
+
+bioplex_raw_plates <- c(
+  system.file("extdata", "example_BioPlex_plate1.xlsx", package = "SeroTrackR"),
+  system.file("extdata", "example_BioPlex_plate2.xlsx", package = "SeroTrackR")
+)
+all_plate_layout <- system.file("extdata", "example_platelayout_1.xlsx", package = "SeroTrackR")
+```
+
+For your data: 
+
+```{r}
+#| exec: false
+#| eval: false
+bioplex_raw_plates <- c(
+  "example_BioPlex_plate1.xlsx", 
+  "example_BioPlex_plate2.xlsx"
+)
+all_plate_layout <- "example_platelayout_1.xlsx" 
+```
+
+**Input your MAGPIX file/s**: 
+
+Using a reproducible example: 
+
+```{r}
+magpix_raw_plate     <- system.file("extdata", "example_MAGPIX_plate3.csv", package = "SeroTrackR")
+```
+
+For your data: 
+
+```{r}
+#| exec: false
+#| eval: false
+magpix_raw_plate      <- "example_MAGPIX_plate3.csv"
+```
+
+**Read the serological data files in**: 
+
+```{r}
+# Serological data
+bioplex_sero_data <- readSeroData(
+  raw_data = bioplex_raw_plates,
+  platform = "bioplex"
+)
+magpix_sero_data <- readSeroData(
+  raw_data = magpix_raw_plate,
+  platform = "magpix", 
+  version = "4.2"
+)
+```
+
+**Merge the files together**: 
+
+```{r}
+sero_data_merged <- NULL
+# data_raw 
+sero_data_merged$data_raw <- bioplex_sero_data$data_raw %>% 
+  bind_rows(magpix_sero_data$data_raw)
+
+# results 
+sero_data_merged$results <- bioplex_sero_data$results %>% 
+  bind_rows(magpix_sero_data$results)
+
+# counts 
+sero_data_merged$counts <- bioplex_sero_data$counts %>% 
+  bind_rows(magpix_sero_data$counts)
+
+# blanks
+sero_data_merged$blanks <- bioplex_sero_data$blanks %>% 
+  bind_rows(magpix_sero_data$blanks)
+
+# stds
+sero_data_merged$stds <- bioplex_sero_data$stds %>% 
+  bind_rows(magpix_sero_data$stds)
+
+# run 
+sero_data_merged$run <- bioplex_sero_data$run %>% 
+  bind_rows(magpix_sero_data$run)
+```
+
+**Continue the rest of the pipeline**: 
+
+```{r}
+#| exec: false
+#| eval: false 
+plate_list_all  <- readPlateLayout(
+  plate_layout = all_plate_layout, 
+  sero_data = sero_data_merged
+)
+
+qc_results <- runQC(
+  sero_data = sero_data_merged, 
+  plate_list = all_plate_layout
+)
+
+mfi_to_rau_output <- MFItoRAU(
+  sero_data = sero_data_merged,
+  plate_list = all_plate_layout, 
+  qc_results = qc_results, 
+  std_point = 10
+)
+
+# etc.. 
+```
 

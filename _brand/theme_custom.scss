@@ -20,7 +20,6 @@ $yellow:                        #d4c34f !default;
 $teal:                          #2f9e8f !default;
 $cyan:                          #3db7c3 !default;
 
-$white:                         #fff !default;
 $gray-100:                      #f8f9fa !default;
 $gray-200:                      #e9ecef !default;
 $gray-300:                      #ddd !default;
@@ -48,13 +47,15 @@ $body-color:                    #444444 !default;
 
 // Fonts
 // stylelint-disable value-keyword-case
-$font-family-headings:          "Helvetica Neue", Helvetica, Arial, sans-serif !default;
-$font-family-body:              "Helvetica Neue", Helvetica, Arial, sans-serif !default;
-$font-family-sans-serif:        "Helvetica Neue", Helvetica, Arial, sans-serif;
+$font-family-sans-serif: system-ui, -apple-system, "Segoe UI", Roboto, 
+                         "Helvetica Neue", Arial, "Noto Sans", 
+                         "Liberation Sans", sans-serif !default;
+$font-family-body: $font-family-sans-serif !default;
+$font-family-headings: $font-family-sans-serif !default;
 $headings-color:                $dark-blue !default;
 
 // stylelint-enable
-$font-size-base:                1.1rem !default;
+$font-size-base:                0.95rem !default;
 $headings-font-weight:          650 !default;
 
 // Tables
@@ -63,7 +64,7 @@ $table-bg-scale:                0 !default;
 
 // Buttons
 $input-btn-padding-y:           .5rem !default;
-$input-btn-padding-x:           1.1rem !default;
+$input-btn-padding-x:           0.95rem !default;
 $btn-font-family:               $font-family-body !default;
 $btn-font-size:                 .875rem !default;
 $btn-font-size-sm:              .588rem !default;
@@ -134,7 +135,7 @@ $callout-color-important:       $purple !default;
   font-size: $font-size-base;
 }
 
-// style the 'tip' callout in green for learning objectives
+// style the 'tip' callout in green
 div.callout.callout-style-default.callout-tip>div.callout-header{
   color: $green;
 }
@@ -149,15 +150,9 @@ div.callout.callout-style-default.callout-note>div.callout-header{
   color: $teal;
 }
 
-// style the 'important' callout in purple for practice questions
+// style the 'important' callout in purple
 div.callout.callout-style-default.callout-important>div.callout-header{
   color: $purple;
-}
-
-// custom icon of question mark for important callout (practice questions)
-div.callout-important.callout-titled .callout-icon::before{
-  background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20640%20512%22%3E%3C!--!Font%20Awesome%20Free%206.7.2%20by%20%40fontawesome%20-%20https%3A%2F%2Ffontawesome.com%20License%20-%20https%3A%2F%2Ffontawesome.com%2Flicense%2Ffree%20Copyright%202025%20Fonticons%2C%20Inc.--%3E%3Cpath%20d%3D%22M96%2064c0-17.7%2014.3-32%2032-32l32%200c17.7%200%2032%2014.3%2032%2032l0%20160%200%2064%200%20160c0%2017.7-14.3%2032-32%2032l-32%200c-17.7%200-32-14.3-32-32l0-64-32%200c-17.7%200-32-14.3-32-32l0-64c-17.7%200-32-14.3-32-32s14.3-32%2032-32l0-64c0-17.7%2014.3-32%2032-32l32%200%200-64zm448%200l0%2064%2032%200c17.7%200%2032%2014.3%2032%2032l0%2064c17.7%200%2032%2014.3%2032%2032s-14.3%2032-32%2032l0%2064c0%2017.7-14.3%2032-32%2032l-32%200%200%2064c0%2017.7-14.3%2032-32%2032l-32%200c-17.7%200-32-14.3-32-32l0-160%200-64%200-160c0-17.7%2014.3-32%2032-32l32%200c17.7%200%2032%2014.3%2032%2032zM416%20224l0%2064-192%200%200-64%20192%200z%22%20fill%3D%22%237d489c%22%2F%3E%3C%2Fsvg%3E");
-
 }
 
 // toc background
@@ -168,7 +163,7 @@ div.callout-important.callout-titled .callout-icon::before{
 
 // caption colour
 .panel-caption, .figure-caption, .subfigure-caption, .table-caption, figcaption, caption{
-  color: $green;
+  color: $blue;
 }
 
 // code again
@@ -226,36 +221,13 @@ p {
   font-family: $font-family-body;
 }
 
-h1 {
+h1, h2, h3, h4, h5, h6 {
   font-family: $font-family-headings;
+  opacity: 1;
+}
+
+h1, h2 {
   font-weight: $headings-font-weight;
-  opacity: 1.0;
-}
-
-h2 {
-  font-family: $font-family-headings;
-  font-weight: $headings-font-weight;
-  opacity: 1.0;
-}
-
-h3 {
-  font-family: $font-family-headings;
-  opacity: 1.0;
-}
-
-h4 {
-  font-family: $font-family-headings;
-  opacity: 1.0;
-}
-
-h5 {
-  font-family: $font-family-headings;
-  opacity: 1.0;
-}
-
-h6 {
-  font-family: $font-family-headings;
-  opacity: 1.0;
 }
 
 blockquote {
@@ -394,3 +366,16 @@ table,
 div.cell-output.cell-output-error > pre > code {
     color: #c5060c !important;
   }
+  
+body {
+  background-color: $gray-200; // gives contrast outside the page
+}
+#quarto-content {
+  background-color: $white;
+  border: 1px solid $gray-300;
+  border-radius: 16px;
+  padding: 30px;
+  margin: 30px auto;
+  max-width: 1250px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}

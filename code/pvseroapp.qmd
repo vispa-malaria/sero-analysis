@@ -20,7 +20,6 @@ setup <- function() {
 }
 
 setup()
-library(SeroTrackR)
 ```
 
 ## Data Analysis: function by function 
@@ -150,23 +149,6 @@ plate_list <- readPlateLayout(
 plate_list
 ```
 
-<!-- ```{r} -->
-<!-- #| results: asis -->
-<!-- #| echo: false -->
-
-<!-- library(purrr) -->
-<!-- library(knitr) -->
-<!-- library(kableExtra) -->
-
-<!-- iwalk(plate_list, ~{ -->
-<!--   cat(.y, "\n\n") -->
-<!--   cat( -->
-<!--     kable(.x, format = "html") -->
-<!--   ) -->
-<!--   cat("\n\n") -->
-<!-- }) -->
-<!-- ``` -->
-
 ```{r}
 #| results: asis
 #| echo: false
@@ -183,46 +165,242 @@ iwalk(plate_list, function(df, nm) {
 })
 ```
 
-Great! Now our serological data has been processed and our plate layouts are added into R-compatible data frames ready for analysis! 
+Great! Now our serological data has been processed and our plate layouts are added into R-compatible data frames ready for analysis!
 
 ### Step 2: Quality control checks
 
+Quality control checks can also be run on any serological data file that has been processed using the `readSeroData()` and `readPlateLayout()` functions. The `runQC()` function will: 
+
+1. Process bead count data (assigns a warning if bead counts are less than 15 or above 500 per antigen).
+2. Assign Sample ID's to Luminex outputs.
+
 ```{r}
 qc_results  <- runQC(
-  sero_data = sero_data, 
-  plate_list = plate_list
+  sero_data = sero_data,       # load in your serological data variable 
+  plate_list = plate_list      # load your plate list variable 
 )
 ```
 
+::: {.callout-tip}
+
+#### runQC Output
+This exports a list of data frames: 
+
+1. `processCounts_output``: The bead counts per antigen, per sample, for each plate. Intermediary file for downstream processing. Warning = 0 for pass and = 1 for fail. 
+2. `getCounts_output`: The processed bead counts file for each sample, summarising whether a sample needs to be repeated. Intermediary file for downstream processing.
+3. `sampleid_output`: Aligning the Luminex anonymised data (SampleID) to the plate layout ID's (Sample). Intermediary file for downstream processing.
+4. `getAntigenCounts_output`: The processed bead counts file per antigen per sample. Used for `plotBeadCounts()`. 
+5. `getCountsQC_output`: The bead counts and QC results per antigen. **Key file**. 
+
+You can access each data frame, for example the `getCountsQC_output` data frame, like this:
 
 ```{r}
-stdcurve_plot             <- plotStds(sero_data, location = "PNG", experiment_name = "experiment1")
-plateqc_plot              <- plotCounts(qc_results, experiment_name = "experiment1")
-check_repeats_output      <- getRepeats(qc_results, plate_list)
-blanks_plot               <- plotBlanks(sero_data, experiment_name = "experiment1")
+#| exec: false
+#| eval: false
+qc_results$getCountsQC_output
 ```
+
+```{r}
+#| echo: false
+qc_results$getCountsQC_output %>%
+  kable() %>%
+  scroll_box(width = "100%", height = "200px")
+```
+
+:::
+
+You can also visualise QC results using the `sero_data` and `qc_results` variables. 
+
+#### Standard Curve Plot
+
+The `plotStds()` function plots the standard curve, generated from the antibody data from the standards you indicated in your plate layout (e.g. S1-S10) and Median Fluorescent Intensity (MFI) units are displayed in log10-adjusted scale. 
+
+In the case of the PvSeroTAT multi-antigen panel, the antigens will be displayed and in general your standard curves should look relatively linear (only when the y-axis is on log-adjusted scale). 
+
+:::{.callout-important}
+For your standard curve, if you have pooled positive control plasma from highly immune adults from: 
+
+- Papua New Guinea (PNG): write `location = "PNG"`
+- Ethiopia (ETH): write `location = "ETH"`. 
+:::
+
+:::{.callout-note}
+Note that the grey dots in the background indicate the standard curve range observed at WEHI for PNG or Ethiopian samples where there are known differences in the standard curve.
+:::
+
+```{r}
+plotStds(sero_data, location = "PNG", experiment_name = "experiment1")
+```
+
+For more information on how to interrogate and visualise standard curves, see the [Explore Standard Curves](std_curves.qmd) page. 
+
+#### Bead Counts QC Plot
+
+The `plotCounts()` function provides a summary of the bead counts for each plate well are displayed, with blue indicating there are sufficient beads (≥15) or red when there are not enough. If any of the wells are red, they should be double-checked manually and re-run on a new plate if required.
+
+```{r}
+plotCounts(qc_results, experiment_name = "experiment1")
+```
+
+```{r}
+#| exec: false
+#| eval: false
+getRepeats(qc_results, plate_list)
+```
+
+The `getRepeats()` function will inform you whether there are "No repeats necessary" or provide a list of samples to be re-run. In the example data, the beads in plate 2 wells A1 and A2 will need to be repeated. 
+
+```{r}
+#| echo: false
+getRepeats(qc_results, plate_list) %>%
+  kable() %>%
+  kable_styling(full_width = TRUE)
+```
+
+For more information on how to visualise these data, see the [Bead Counts](counts.qmd) page. 
+
+#### Blanks QC Plot
+
+The Median Fluorescent Intensity (MFI) units for each antigen is displayed for your blank samples. In general, each blank sample should have ≤50 MFI for each antigen, if they are higher they should be cross-checked manually.
+
+```{r}
+plotBlanks(sero_data, experiment_name = "experiment1")
+```
+
+:::{.callout-info}
+In the example data, blank samples recorded higher MFI values for LF005 on plate 1 and should be checked to confirm this is expected from the assay.
+:::
 
 ### Step 3: MFI to RAU conversion 
 
-If location == png or if you are not using the Pv classification 
+The automated data processing allows you to convert your Median Fluorescent Intensity (MFI) data into Relative Antibody Units (RAU) by fitting a 5-parameter logistic function to the standard curve on a per-antigen level using the `MFItoRAU()` function suite. 
+
+**Key input variables**:
+ 
+- `sero_data`, `plate_list`, `qc_results`: Previously defined variables from the `readSeroData()`, `readPlateLayout()` and `runQC()` functions. 
+- `std_point`: Standard Point Curve: 5 = 5-point curve, 10 = 10-point curve. 
+
+:::{.callout-tip}
+If you are using the `PvSeroTAT algorithm` and have used pooled positive control plasma from highly immune adults from Papua New Guinea (PNG) for your standard curve, then use the `MFItoRAU()` and `plotModel()` functions. 
+
+If you are NOT performing *P. vivax* serology-related work for classification, then you can also use these functions.
+:::
 
 ```{r}
-mfi_to_rau_output       <- suppressWarnings(MFItoRAU(sero_data, plate_list, qc_results, std_point = 10, project = NULL))
-model_plot              <- plotModel(mfi_to_rau_output, sero_data)
+#| warning: false
+#| message: false
+mfi_to_rau_output <- MFItoRAU(
+  sero_data = sero_data, 
+  plate_list = plate_list,
+  qc_results = qc_results, 
+  std_point = 10
+)
 ```
 
-if location == eth 
+The `mfi_to_rau_output` variable contains the processed MFI and RAU data for each antigen per sample. There are three data frames output from this variable: 
+
+1. ``[[1]]``: Contains correct SampleID's, well number and letters, MFI and RAU values per antigen and QC results. 
+1. ``[[2]]``: Contains correct SampleID's, MFI and RAU values per antigen and QC results. **Cleaner data frame!**
+1. ``[[3]]``: Raw MFI to RAU conversion data per antigen. 
+
+If you are using the `PvSeroTAT algorithm`, we need to save it into a variable to use it for classification in the next step! 
 
 ```{r}
-mfi_to_rau_output       <- suppressMessages(MFItoRAU_Adj(sero_data, plate_list, qc_results, std_point = 10, project = NULL))
-model_plot              <- plotModel_Adj(mfi_to_rau_output, sero_data)
+#| exec: false
+#| eval: false
+mfi_to_rau_output[[2]]
 ```
+
+```{r}
+#| echo: false
+mfi_to_rau_output[[2]] %>%
+  kable() %>% 
+  scroll_box(width = "100%", height = "200px")
+```
+
+The results from this log-log conversion should look relatively linear for each antigen and can be plotted using the `plotModel()` function suite. 
+
+```{r}
+plotModel(mfi_to_rau_output, sero_data)
+```
+
+:::{.callout-tip}
+If you are performing the `PvSeroTAT algorithm` and have used pooled positive control plasma from highly immune adults from Ethiopia (ETH) for your standard curve, then use the `MFItoRAU_Adj()` and `plotModel_Adj()` functions. 
+:::
+
+```{r}
+#| warning: false
+#| message: false
+mfi_to_rau_output <- MFItoRAU_Adj(
+  sero_data, 
+  plate_list, 
+  qc_results, 
+  std_point = 10
+)
+plotModel_Adj(mfi_to_rau_output, sero_data)
+```
+
+For more information on how to visualise MFI and RAU data, see the [MFI and RAU plots](mfi_rau.qmd) page. 
 
 ### Step 4: Classification 
 
+This final function classifies samples as recently exposed within the last nine months ("seropositive") or not ("seronegative"). 
+
+The `algorithm_type` chosen can be **"antibody_model"** or **"antibody_model_excLF016"**. 
+
+:::{.callout-tip}
+#### Which algorithm do I choose?
+**antibody_model**: PvSeroApp Algorithm: The PvSeroApp Model contains all top 8 antigens. 
+
+**antibody_model_excLF016**: As the name suggests, this model contains the antigens in PvSeroApp except for LF016. 
+:::
+
+The `sens_spec` can be: 
+
+- "balanced" (default)
+- "85% sensitivity"
+- "90% sensitivity"
+- "95% sensitivity"
+- "85% specificity"
+- "90% specificity"
+- "95% specificity"
+
+:::{.callout-tip}
+#### Which sensitivity/specificity threshold do I use? 
+The **balanced** sensitivity / specificity is when both metrics are at their highest and correspond to 81% each. 
+
+**High sensitivity with lower specificity** maximises the identification and treatment of all likely hypnozoite carriers at the cost of some over-treatment. As radical cure carries a risk of haemolysis in G6PD-deficient individuals10 and G6PD screening can add a substantial burden to healthcare costs, operational use of a high-sensitivity, low-specificity approach is unlikely. 
+
+**High specificity with lower sensitivity** is suited for surveillance settings and aims to correctly identify non-carriers and minimise treatment of uninfected individual, while the impact of false negatives can be mitigated by increasing survey size. 
+:::
+
 ```{r}
-classifyResults_output    <- classifyResults(mfi_to_rau_output, algorithm_type = "antibody_model", sens_spec = "balanced", qc_results, project = NULL)
+classifyResults_output <- classifyResults(
+  mfi_to_rau_output, 
+  algorithm_type = "antibody_model", 
+  sens_spec = "balanced", 
+  qc_results
+)
 ```
+
+The results from the classification are displayed in a table. The exposure status (seropositive/seronegative) is displayed for each sample. 
+
+To form an educated guess about the seropositivity/exposure status for your samples, take into consideration all relevant epidemiological information that you may have available to you (e.g. time since possible exposure, timing of sampling with respect to incidence of *P. vivax* infections/cases) and explore the results using the classifier/s.
+
+```{r}
+#| exec: false 
+#| eval: false
+classifyResults_output
+```
+
+```{r}
+#| echo: false
+classifyResults_output %>% 
+  kable() %>% 
+  scroll_box(width = "100%", height = "200px")
+```
+
+For more information on how to interrogate and visualise these data, see the [Classification](classification.qmd) page. 
 
 ## Data Analysis: `runPvSeroPipeline()` 
 
@@ -258,17 +436,11 @@ final_analysis[[1]] %>%
 
 #### Standard Curve Plot
 
-The standard curve plots are generated from the antibody data from the standards you indicated in your plate layout (e.g. S1-S10) and Median Fluorescent Intensity (MFI) units are displayed in log10-scale. In the case of the PvSeroTaT multi-antigen panel, the antigens will be displayed and in general your standard curves should look relatively linear (only when the y-axis is on logarithmic scale). 
-
 ```{r std curve plot tab 1}
 final_analysis[[2]]
 ```
 
 #### Bead Counts QC Plot
-
-A summary of the bead counts for each plate well are displayed, with blue indicating there are sufficient beads (≥15) or red when there are not enough. If any of the wells are red, they should be double-checked manually and re-run on a new plate if required.
-
-The function will inform you whether there are "No repeats necessary" or provide a list of samples to be re-run. In the example data, the beads in plate 2 wells A1 and A2 will need to be repeated
 
 ```{r bead counts plot tab 1}
 final_analysis[[3]] # Plot
@@ -277,17 +449,11 @@ final_analysis[[4]] # Samples to repeat
 
 #### Blanks QC Plot
 
-The Median Fluorescent Intensity (MFI) units for each antigen is displayed for your blank samples. In general, each blank sample should have ≤50 MFI for each antigen, if they are higher they should be cross-checked manually.
-
-In the example data, blank samples recorded higher MFI values for LF005 on plate 1 and should be checked to confirm this is expected from the assay.
-
 ```{r blanks qc plot tab 1}
 final_analysis[[5]]
 ```
 
 #### Model Output Plot
-
-The automated data processing in this app allows you to convert your Median Fluorescent Intensity (MFI) data into Relative Antibody Units (RAU) by fitting a 5-parameter logistic function to the standard curve on a per-antigen level. The results from this log-log conversion should look relatively linear for each antigen.
 
 ```{r model output plot tab 1}
 final_analysis[[6]]
@@ -303,12 +469,11 @@ no_classification_final_analysis <- runPvSeroPipeline(
   location = "ETH", 
   experiment_name = "experiment1", 
   std_point = 10,
-  classify = "No", # key if you do NOT want any classification performed i.e., you do not have PvSeroTaT antigens 
+  classify = "No", # key if you do NOT want any classification performed i.e., you do not have PvSeroTAT antigens 
   algorithm_type = "antibody_model", 
   sens_spec = "balanced"
 )
 ```
-
 
 #### MFI and RAU Data 
 

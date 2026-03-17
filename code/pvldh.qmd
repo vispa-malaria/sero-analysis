@@ -10,7 +10,7 @@ knitr::opts_chunk$set(
 )
 options(rmarkdown.html_vignette.check_title = FALSE)
 setup <- function() {
-  needed <- c("knitr", "rmarkdown", "tidyverse", "kableExtra")
+  needed <- c("knitr", "rmarkdown", "tidyverse", "kableExtra", "purrr")
   
   lapply(needed, function(pkg) {
     if (requireNamespace(pkg, quietly = TRUE)) {
@@ -20,40 +20,274 @@ setup <- function() {
 }
 
 setup()
-library(SeroTrackR)
 ```
 
-## Data Analysis: LDH
+For the PvLDH data analysis, follow the steps below: 
 
-For the LDH data analysis, follow the steps below: 
-
-### Using Tutorial Dataset: Load the Data
+## Using Tutorial Dataset: Load the Data
 
 We will be using the build-in files in the R package for this tutorial, as shown below. 
 
-```{r setup 1, eval=FALSE}
+```{r}
+#| warning: false
+#| message: false
 library(SeroTrackR)
 library(tidyverse)
 
-your_raw_data <- system.file("extdata", "example_BioPlex_PvLDH_plate1.csv", package = "SeroTrackR")
-your_plate_layout <- system.file("extdata", "example_platelayout_1.xlsx", package = "SeroTrackR")
+your_raw_LDH_data         <- system.file("extdata", "example_BioPlex_PvLDH_plate1.xlsx", package = "SeroTrackR")
+your_LDH_plate_layout     <- system.file("extdata", "example_platelayout_1.xlsx", package = "SeroTrackR")
 ```
 
-To run your OWN data, follow the code below and uncomment (i.e., remove the hashtags): 
+To run your OWN data, follow the code below: 
 
 ```{r exec=FALSE, eval=FALSE}
-your_raw_data <- "PATH/TO/YOUR/FILE/plate1.csv"
-your_plate_layout <- "PATH/TO/YOUR/FILE/plate_layout.xlsx"
+#| exec: false
+#| eval: false 
+your_raw_LDH_data       <- "PATH/TO/YOUR/FILE/plate1.xlsx"
+your_LDH_plate_layout   <- "PATH/TO/YOUR/FILE/plate_layout.xlsx"
 ```
 
-### Run Pipeline 
+## Step 1: Read in your data
 
-```{r example code for LDH, eval=FALSE}
-runLDHpipeline(
-  raw_data = your_raw_data,
-  plate_layout = your_plate_layout,
-  platform = "bioplex",                               # Defaults to "bioplex" but "magpix" also works
-  file_path = NULL                                    # Defaults to current folder/working directory
+:::{.callout-note}
+### Data preparation 
+
+Please ensure that you have read and prepared your raw Luminex files and plate layout files as per the instructions in the [Before You Begin](intro.qmd) page. 
+
+:::
+
+You can read any Luminex serology data file using the `readSeroData()` function. The Luminex platform can be specified using the `platform` argument, with either `bioplex`, `magpix` or `intelliflex`. 
+
+For the xPONENT software-based exported files (MAGPIX or INTELLIFLEX), the version of the software should be specified as either **"4.2"** or **"4.3"**, with the version **"4.2"** as the default.
+
+```{r}
+ldh_sero_data <- readSeroData(
+  raw_data = your_raw_LDH_data, 
+  platform = "bioplex"
 )
 ```
 
+```{r}
+#| exec: false
+#| eval: false
+ldh_sero_data
+```
+
+```{r}
+#| results: asis
+#| echo: false
+
+iwalk(ldh_sero_data, function(df, nm) {
+
+  cat("$", nm, "\n\n")
+
+  tbl <- kable(df, format = "html") %>%
+    kable_styling(full_width = TRUE) %>%
+    scroll_box(width = "100%", height = "200px")
+  print(tbl)
+
+  cat("\n\n")
+})
+```
+
+::: {.callout-tip}
+
+### readSeroData Output
+This exports a list of data frames: 
+
+1. `raw`: The raw, unedited files: A check that the correct file/s were added.
+2. `results`: The processed serological data files: Antigen names compatible with the R package, clear columns for each antigen and their MFI results.
+3. `counts`: The bead counts detected from the Luminex instrument per antigen, per sample, for each plate. 
+4. `blanks`: The MFI results for the blank wells. 
+5. `stds`: The MFI results for the standard curve samples.
+6. `run`: The run information from the Luminex machine. 
+
+You can access each data frame, for example the `results` data frame, like this:
+
+```{r}
+#| exec: false
+#| eval: false
+ldh_sero_data$results
+```
+
+```{r}
+#| echo: false
+ldh_sero_data$results %>%
+  kable() %>%
+  scroll_box(width = "100%", height = "200px")
+```
+
+:::
+
+Next, you need to read in the plate layout! This file will allow us to relabel the raw luminex data from "unknowns" to our study Sample ID's. 
+
+```{r}
+ldh_plate_list <- readPlateLayout(
+  plate_layout = your_LDH_plate_layout, 
+  sero_data  = ldh_sero_data
+)
+```
+
+```{r}
+#| exec: false
+#| eval: false
+ldh_plate_list
+```
+
+```{r}
+#| results: asis
+#| echo: false
+
+iwalk(ldh_plate_list, function(df, nm) {
+
+  cat("$", nm, "\n\n")
+
+  tbl <- kable(df, format = "html") %>%
+    kable_styling(full_width = TRUE)
+  print(tbl)
+
+  cat("\n\n")
+})
+```
+
+Great! Now our serological data has been processed and our plate layouts are added into R-compatible data frames ready for analysis!
+
+## Step 2: Quality control checks
+
+Quality control checks can also be run on any serological data file that has been processed using the `readSeroData()` and `readPlateLayout()` functions. The `runQC()` function will: 
+
+1. Process bead count data (assigns a warning if bead counts are less than 15 or above 500 per antigen).
+2. Assign Sample ID's to Luminex outputs.
+
+```{r}
+ldh_qc_results  <- runQC(
+  sero_data = ldh_sero_data,       # load in your serological data variable 
+  plate_list = ldh_plate_list      # load your plate list variable 
+)
+```
+
+::: {.callout-tip}
+
+### runQC Output
+This exports a list of data frames: 
+
+1. `processCounts_output``: The bead counts per antigen, per sample, for each plate. Intermediary file for downstream processing. Warning = 0 for pass and = 1 for fail. 
+2. `getCounts_output`: The processed bead counts file for each sample, summarising whether a sample needs to be repeated. Intermediary file for downstream processing.
+3. `sampleid_output`: Aligning the Luminex anonymised data (SampleID) to the plate layout ID's (Sample). Intermediary file for downstream processing.
+4. `getAntigenCounts_output`: The processed bead counts file per antigen per sample. Used for `plotBeadCounts()`. 
+5. `getCountsQC_output`: The bead counts and QC results per antigen. **Key file**. 
+
+You can access each data frame, for example the `getCountsQC_output` data frame, like this:
+
+```{r}
+#| exec: false
+#| eval: false
+ldh_qc_results$getCountsQC_output
+```
+
+```{r}
+#| echo: false
+ldh_qc_results$getCountsQC_output %>%
+  kable() %>%
+  scroll_box(width = "100%", height = "200px")
+```
+
+:::
+
+You can also visualise QC results using the `ldh_sero_data` and `ldh_qc_results` variables. 
+
+### Standard Curve Plot
+
+The `plotStds_all()` function plots the standard curve, generated from the antibody data from the standards you indicated in your plate layout (e.g. S1-S10) and Median Fluorescent Intensity (MFI) units are displayed in log10-adjusted scale. 
+
+In the case of the PvSeroTAT multi-antigen panel, the antigens will be displayed and in general your standard curves should look relatively linear (only when the y-axis is on log-adjusted scale). 
+
+```{r}
+plotStds_all(ldh_sero_data, experiment_name = "experiment1")
+```
+
+For more information on how to interrogate and visualise standard curves, see the [Explore Standard Curves](std_curves.qmd) page. 
+
+### Bead Counts QC Plot
+
+The `plotCounts()` function provides a summary of the bead counts for each plate well are displayed, with blue indicating there are sufficient beads (≥15) or red when there are not enough. If any of the wells are red, they should be double-checked manually and re-run on a new plate if required.
+
+```{r}
+plotCounts(ldh_qc_results, experiment_name = "experiment1")
+```
+
+```{r}
+#| exec: false
+#| eval: false
+getRepeats(ldh_qc_results, ldh_plate_list)
+```
+
+The `getRepeats()` function will inform you whether there are "No repeats necessary" or provide a list of samples to be re-run. In the example data, the beads in plate 2 wells A1 and A2 will need to be repeated. 
+
+```{r}
+#| echo: false
+getRepeats(ldh_qc_results, ldh_plate_list) %>%
+  kable() %>%
+  kable_styling(full_width = TRUE)
+```
+
+For more information on how to visualise these data, see the [Bead Counts](counts.qmd) page. 
+
+### Blanks QC Plot
+
+The Median Fluorescent Intensity (MFI) units for each antigen is displayed for your blank samples. In general, each blank sample should have ≤50 MFI for each antigen, if they are higher they should be cross-checked manually.
+
+```{r}
+plotBlanks(ldh_sero_data, experiment_name = "experiment1")
+```
+
+:::{.callout-info}
+In the example data, blank samples recorded higher MFI values for LF005 on plate 1 and should be checked to confirm this is expected from the assay.
+:::
+
+## Step 3: MFI to RAU conversion 
+
+The automated data processing allows you to convert your Median Fluorescent Intensity (MFI) data into Relative Antibody Units (RAU) by fitting a 5-parameter logistic function to the standard curve on a per-antigen level using the `MFItoRAU_LDH()` function. 
+
+**Key input variables**:
+ 
+- `sero_data`, `plate_list`: Previously defined variables from the `readSeroData()` and `readPlateLayout()` functions. 
+- `dilution`: 10-point standard curve dilution: The default is: 1000000, 333333.33, 111111.11, 37037.04, 12345.68, 4115.23, 1371.74, 457.25, 152.42, 50.81 and **does not** need to be specified again unless changing. 
+
+```{r}
+#| warning: false
+#| message: false
+ldh_mfi_to_rau_output <- MFItoRAU_LDH(
+  sero_data = ldh_sero_data, 
+  plate_list = ldh_plate_list,
+  file_path = NULL                      # Defaults to current folder/working directory
+)
+```
+
+The `mfi_to_rau_output` variable contains the processed MFI and RAU data for each antigen per sample. 
+
+```{r}
+#| exec: false
+#| eval: false
+ldh_mfi_to_rau_output
+```
+
+```{r}
+#| echo: false
+ldh_mfi_to_rau_output %>%
+  kable() %>% 
+  scroll_box(width = "100%", height = "200px")
+```
+
+For more information on how to visualise MFI and RAU data, see the [MFI and RAU plots](mfi_rau.qmd) page. 
+
+## Data Analysis: Run Pipeline 
+
+```{r example code for LDH, eval=FALSE}
+runLDHpipeline(
+  raw_data = your_raw_LDH_data,
+  plate_layout = your_LDH_plate_layout,
+  platform = "bioplex",                               # Defaults to "bioplex" but "magpix" or "intelliflex" also works
+  file_path = NULL                                    # Defaults to current folder/working directory
+)
+```

@@ -7,28 +7,28 @@ $theme: "theme_custom_dark" !default;
 $white:                         #ffffff !default;
 $black:                         #000000 !default;
 
-$blue:                          #237ca8 !default;
-$light-blue:                    #3db7c3 !default;
-$light-green:                   #94d5b3 !default;
-$green:                         #4eba81 !default;
-$indigo:                        #3f5aa9 !default;
-$purple:                        #5e4b8b !default;
-$pink:                          #c76b98 !default;
-$red:                           #b23a48 !default;
-$orange:                        #d17a3a !default;
-$yellow:                        #d4c34f !default;
-$teal:                          #2f9e8f !default;
-$cyan:                          #3db7c3 !default;
+$blue:                          #4aa3cf !default;
+$light-blue:                    #63d3de !default;
+$light-green:                   #b6e8c9 !default;
+$green:                         #63d99b !default;
+$indigo:                        #6f8ee6 !default;
+$purple:                        #8a74d6 !default;
+$pink:                          #e08ab5 !default;
+$red:                           #e06572 !default;
+$orange:                        #f0a35a !default;
+$yellow:                        #eadc72 !default;
+$teal:                          #53c7b6 !default;
+$cyan:                          #63d3de !default;
 
-$gray-100:                      #0f2a3d !default;
-$gray-200:                      #1c3b52 !default;
-$gray-300:                      #24485f !default;
-$gray-400:                      #2e5a74 !default;
-$gray-500:                      #5f7f96 !default;
-$gray-600:                      #7f9bb0 !default;
-$gray-700:                      #a5bdcf !default;
-$gray-800:                      #c7d9e6 !default;
-$gray-900:                      #e6edf3 !default;
+$gray-100:                      #111111 !default;  // very dark
+$gray-200:                      #2a2a2a !default;
+$gray-300:                      #444444 !default;
+$gray-400:                      #5e5e5e !default;
+$gray-500:                      #808080 !default;  // middle grey
+$gray-600:                      #a0a0a0 !default;
+$gray-700:                      #c0c0c0 !default;
+$gray-800:                      #d9d9d9 !default;
+$gray-900:                      #f0f0f0 !default;  // very light
 
 $primary:                       $blue !default;
 $secondary:                     $light-blue !default;
@@ -43,18 +43,20 @@ $dark:                          #e6edf3 !default;
 $min-contrast-ratio:            1.85 !default;
 
 // Body
-$body-bg:                       #0b1e2d !default;
+$body-bg:                       $gray-100 !default;
 $body-color:                    #e6edf3 !default;
 
 // Fonts
 // stylelint-disable value-keyword-case
-$font-family-headings:          "Helvetica Neue", Helvetica, Arial, sans-serif !default;
-$font-family-body:              "Helvetica Neue", Helvetica, Arial, sans-serif !default;
-$font-family-sans-serif:        "Helvetica Neue", Helvetica, Arial, sans-serif;
+$font-family-sans-serif: system-ui, -apple-system, "Segoe UI", Roboto, 
+                         "Helvetica Neue", Arial, "Noto Sans", 
+                         "Liberation Sans", sans-serif !default;
+$font-family-body:              $font-family-sans-serif !default;
+$font-family-headings:          $font-family-sans-serif !default;
 $headings-color:                $light-blue !default;
 
 // stylelint-enable
-$font-size-base:                1.1rem !default;
+$font-size-base:                0.95rem !default;
 $headings-font-weight:          650 !default;
 
 // Tables
@@ -63,7 +65,7 @@ $table-bg-scale:                0 !default;
 
 // Buttons
 $input-btn-padding-y:           .5rem !default;
-$input-btn-padding-x:           1.1rem !default;
+$input-btn-padding-x:           0.95rem !default;
 $btn-font-family:               $font-family-body !default;
 $btn-font-size:                 .875rem !default;
 $btn-font-size-sm:              .588rem !default;
@@ -94,10 +96,11 @@ $badge-padding-x:               1.2em !default;
 $alert-border-width:            0 !default;
 
 // Code
-$code-block-bg:                 #132b3a !default;
-$mono-background-color:         #132b3a;
-$code-color:                    #94d5b3;
-$code-block-border-left:        #237ca8;
+$code-block-bg:                 $gray-100 !default;
+$mono-background-color:         $gray-100;
+$code-color:                    #e6edf3 !default;  // light text for dark backgrounds
+$mono-background-color:         $gray-200 !default; // slightly lighter than page
+$code-block-border-left:        $body-color !default;
 
 // mermaid theming
 $mermaid-bg-color:              $white;
@@ -148,15 +151,9 @@ div.callout.callout-style-default.callout-note>div.callout-header{
   color: $teal;
 }
 
-// style the 'important' callout in purple for practice questions
+// style the 'important' callout in purple 
 div.callout.callout-style-default.callout-important>div.callout-header{
   color: $purple;
-}
-
-// custom icon of question mark for important callout (practice questions)
-div.callout-important.callout-titled .callout-icon::before{
-  background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20640%20512%22%3E%3C!--!Font%20Awesome%20Free%206.7.2%20by%20%40fontawesome%20-%20https%3A%2F%2Ffontawesome.com%20License%20-%20https%3A%2F%2Ffontawesome.com%2Flicense%2Ffree%20Copyright%202025%20Fonticons%2C%20Inc.--%3E%3Cpath%20d%3D%22M96%2064c0-17.7%2014.3-32%2032-32l32%200c17.7%200%2032%2014.3%2032%2032l0%20160%200%2064%200%20160c0%2017.7-14.3%2032-32%2032l-32%200c-17.7%200-32-14.3-32-32l0-64-32%200c-17.7%200-32-14.3-32-32l0-64c-17.7%200-32-14.3-32-32s14.3-32%2032-32l0-64c0-17.7%2014.3-32%2032-32l32%200%200-64zm448%200l0%2064%2032%200c17.7%200%2032%2014.3%2032%2032l0%2064c17.7%200%2032%2014.3%2032%2032s-14.3%2032-32%2032l0%2064c0%2017.7-14.3%2032-32%2032l-32%200%200%2064c0%2017.7-14.3%2032-32%2032l-32%200c-17.7%200-32-14.3-32-32l0-160%200-64%200-160c0-17.7%2014.3-32%2032-32l32%200c17.7%200%2032%2014.3%2032%2032zM416%20224l0%2064-192%200%200-64%20192%200z%22%20fill%3D%22%237d489c%22%2F%3E%3C%2Fsvg%3E");
-
 }
 
 // toc background
@@ -167,7 +164,7 @@ div.callout-important.callout-titled .callout-icon::before{
 
 // caption colour
 .panel-caption, .figure-caption, .subfigure-caption, .table-caption, figcaption, caption{
-  color: $green;
+  color: $blue;
 }
 
 // code again
@@ -185,6 +182,15 @@ td code:not(.sourceCode) {
   color: $code-color !important;                        // light text
 }
 
+p, li, span {
+  color: $body-color !important;  
+}
+
+code:not(.sourceCode) {
+  background-color: $gray-200 !important;  // subtle contrast
+  color: $body-color !important;
+}
+
 /* Code-with-filename blocks */
 .code-with-filename .code-with-filename-file {
   background-color: darken($blue, 10%) !important;     // slightly darker for contrast
@@ -197,18 +203,17 @@ div.code-with-filename-file > pre {
 }
 
 // Navbar
-
 .navbar {
   font-size: 1.0rem;
-  border: 1px solid #0f2a3d;
+  border: 1px solid $gray-100;
 
   &.bg-dark {
-    background-color: #0f2a3d !important;
+    background-color: $gray-100 !important;
   }
 
   &.bg-light {
-    background-color: #0f2a3d !important;
-    border: 1px solid #0f2a3d;
+    background-color: $gray-100 !important;
+    border: 1px solid $gray-100;
 
     &.navbar-fixed-top {
       border-width: 0 0 1px;
@@ -226,8 +231,8 @@ div.code-with-filename-file > pre {
 
 /* Sidebar background */
 .sidebar {
-  background-color: #0f2a3d !important;
-  border-right: 1px solid #1c3b52;
+  background-color: $gray-100 !important;
+  border-right: 1px solid $gray-100;
 }
 
 /* Sidebar links */
@@ -249,41 +254,17 @@ div.code-with-filename-file > pre {
 }
 
 // Typography
-
 p {
   font-family: $font-family-body;
 }
 
-h1 {
+h1, h2, h3, h4, h5, h6 {
   font-family: $font-family-headings;
+  opacity: 1;
+}
+
+h1, h2 {
   font-weight: $headings-font-weight;
-  opacity: 1.0;
-}
-
-h2 {
-  font-family: $font-family-headings;
-  font-weight: $headings-font-weight;
-  opacity: 1.0;
-}
-
-h3 {
-  font-family: $font-family-headings;
-  opacity: 1.0;
-}
-
-h4 {
-  font-family: $font-family-headings;
-  opacity: 1.0;
-}
-
-h5 {
-  font-family: $font-family-headings;
-  opacity: 1.0;
-}
-
-h6 {
-  font-family: $font-family-headings;
-  opacity: 1.0;
 }
 
 blockquote {
@@ -319,7 +300,6 @@ table,
 }
 
 // Indicators
-
 .alert {
   color: $white;
   font-size: $font-size-sm;
@@ -425,3 +405,52 @@ table,
 div.cell-output.cell-output-error > pre > code {
     color: #c5060c !important;
   }
+  
+// Ensure code text is light in dark theme 
+/* Code blocks */
+pre,
+pre code,
+.sourceCode,
+.sourceCode code {
+  color: #e6edf3 !important;   // light text
+  background-color: $code-block-bg !important;
+}
+
+/* Syntax highlighting tokens */
+.sourceCode span {
+  color: #e6edf3 !important;
+}
+.sourceCode span.kw { color: #94d5b3 !important; } // keywords
+.sourceCode span.st { color: #d4c34f !important; } // strings
+.sourceCode span.co { color: #7f9bb0 !important; } // comments
+.sourceCode span.fu { color: #3db7c3 !important; } // functions
+
+/* Inline code */
+code:not(.sourceCode) {
+  color: #e6edf3 !important;
+  background-color: $mono-background-color !important;
+}
+
+/* Quarto cell output */
+.cell-output pre,
+.cell-output code {
+  color: #e6edf3 !important;
+}
+
+/* Code block container */
+div.sourceCode {
+  background-color: $code-block-bg !important;
+}
+
+body {
+  background-color: $gray-200; // gives contrast outside the page
+}
+#quarto-content {
+  background-color: $gray-100;
+  border: 1px solid $gray-300;
+  border-radius: 16px;
+  padding: 30px;
+  margin: 30px auto;
+  max-width: 1250px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}

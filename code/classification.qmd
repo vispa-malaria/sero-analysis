@@ -1,6 +1,235 @@
 ---
 title: "Classification"
-format: html
+format:
+  html:
+    cite-method: citeproc
 ---
 
-Code on how to evaluate the classification results of your samples 
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+options(rmarkdown.html_vignette.check_title = FALSE)
+setup <- function() {
+  needed <- c("knitr", "rmarkdown", "tidyverse", "kableExtra", "purrr")
+  
+  lapply(needed, function(pkg) {
+    if (requireNamespace(pkg, quietly = TRUE)) {
+      library(pkg, character.only = TRUE)
+    }
+  })
+}
+
+setup()
+```
+
+This tutorial focuses on understanding (i) what the classification algorithm aims to do, (ii) how to interpret these data, and (iii) how to visualise these data. 
+
+## *P. vivax* Machine Learning Classification Algorithm 
+
+Plasma samples from year-long observational cohort studies conducted in malaria-endemic regions in Thailand (Kanchanaburi and Ratchaburi provinces), Brazil (Manaus) and Solomon Islands (Ngella) were measured for antigen-specific IgG antibody responses toward a panel of eight antigens using the method outlined in [@longley2020]. 
+
+Enrolled individuals in the year-long cohort studies provided a blood sample every month. Light microscopy and qPCR targeting the blood-stages of *P. vivax* were performed to detect which individuals were infected and at which time point during these studies. IgG antibody responses towards a panel of *P. vivax* antigens were measured at the last visit of the year-long study, enabling us to characterise antibody responses related with time since *P. vivax* infection. Negative controls from the Australian Red Cross, Brazil Red Cross, Thai Red Cross and the Volunteer Blood Donor Registry in Victoria, Australia were included. These data were used as our training dataset (#tbl-table1). 
+
+```{r}
+#| echo: false 
+#| label: table1
+#| tbl-cap: "Table 1: Description of sample size for training and testing dataset, including plasma samples from year-long observational cohort studies in malaria-endemic regions of Brazil, Thailand, and the Solomon Islands, as well as negative controls from Australia, Thailand and Brazil."
+
+table1 <- data.frame(
+  `Source/Country` = c("Brazil", "Thailand", "Solomon Islands", "Volunteer Blood Donor Registry", 
+                           "Australian Red Cross", "Thai Red Cross", "Brazil Blood Donor Registry"), 
+  Type = c("Year-long cohort study", "Year-long cohort study", "Year-long cohort study", 
+               "Negative control", "Negative control", "Negative control", "Negative control"),
+  `No. samples` = c("886", "680", "709", "98", "97", "69", "96")
+)
+table1 %>% 
+  kable() %>% 
+  kable_styling(full_width = T)
+```
+
+This work develops a sero-diagnostic test to balance the selection of serological exposure markers that are associated with high classification performance, with the selection of proteins that are easier to manufacture and are more stable.
+
+(#tbl-table2) outlines the top eight P. vivax proteins selected in the model (discussed further below in the random forest classification methods), their associated lifecycle stage and description of the proteins and expression system.
+
+```{r table 2}
+#| echo: false 
+#| label: table2
+#| tbl-cap: "Table 2. *P. vivax* proteins considered in the selection of our serological exposure markers."
+table2 <- data.frame(
+  Antigen = c("RBP2b", "MSP1-19", "Pv-fam-a", "MSP5", "EBP", "PTEX150", "PvCSS", "MSP8"), 
+  `Gene ID (PlasmoDB)` = c("PVX_094255", "PVX_099980", "PVX_096995", "PVX_003770", "KMZ83376.1", "PVX_084720", "PVX_086200", "PVX_097625")
+  )
+table2 %>% 
+  kable() %>% 
+  kable_styling(full_width = T)
+```
+
+Random forests are a machine learning algorithm which creates an "ensemble" or "sets" of decision trees (i.e., a "forest") from slightly different versions of the training dataset. Each ensemble makes a separate prediction which is then averaged to get a more accurate and stable final prediction, resulting in good classification performance compared to a single decision tree and little overfitting to the training data due to the use of multiple trees.
+
+We trained a random forest classification algorithm to learn the patterns in antibody response for someone infected in the previous nine months. Because of our sampling method, our training dataset includes "true positives" and "true negatives" which allows us to compare to the model predicted "positives" and "negatives".
+
+A **random forest** classification algorithm was created for all possible combinations for the eight antigens using 10-fold cross-validations with five repeats. The final random forest was fit with 1,000 trees and all hyperparameters were default.
+
+### Setup 
+
+```{r setup 1}
+#| warning: false
+#| message: false
+library(SeroTrackR)
+library(tidyverse)
+
+your_raw_data <- c(
+  system.file("extdata", "example_MAGPIX_plate1.csv", package = "SeroTrackR"),
+  system.file("extdata", "example_MAGPIX_plate2.csv", package = "SeroTrackR"), 
+  system.file("extdata", "example_MAGPIX_plate3.csv", package = "SeroTrackR")
+)
+your_plate_layout <- system.file("extdata", "example_platelayout_1.xlsx", package = "SeroTrackR")
+
+sero_data <- readSeroData(
+  raw_data = your_raw_data, 
+  platform = "magpix",        # default 
+  version = "4.2"             # default 
+)
+
+plate_list <- readPlateLayout(
+  plate_layout = your_plate_layout, 
+  sero_data  = sero_data
+)
+
+qc_results  <- runQC(
+  sero_data = sero_data,       # load in your serological data variable 
+  plate_list = plate_list      # load your plate list variable 
+)
+
+mfi_to_rau_output <- MFItoRAU(
+  sero_data = sero_data, 
+  plate_list = plate_list,
+  qc_results = qc_results, 
+  std_point = 10
+)
+```
+
+The `classifyResults()` function classifies samples as recently exposed within the last nine months ("seropositive") or not ("seronegative"). 
+
+## Which algorithm do I choose?
+
+The `algorithm_type` chosen can be **"antibody_model"** or **"antibody_model_excLF016"**. 
+
+**antibody_model**: PvSeroApp Algorithm: The PvSeroApp Model contains all top 8 antigens. 
+
+**antibody_model_excLF016**: As the name suggests, this model contains the antigens in PvSeroApp except for LF016. 
+
+## Sensitivity and Specificity 
+
+### Some definitions
+
+- True Positive (TP), True Negative (TN), False Positive (FP), False Negative (FN).
+- **Sensitivity**: Tests the proportion of people who test positive among all of those who actually have the disease. 
+  - Sens = <span style="color:#9373C0;">TP</span> / (<span style="color:#9373C0;">TP</span> + <span style="color:#CA5010;">FN</span>).
+- **Specificity**: Tests the proportion of people who test negative among all those who actually do not have the disease. 
+  - Spec = <span style="color:#2AA0A4;">TN</span> / (<span style="color:#2AA0A4;">TN</span> + <span style="color:#E3008C;">FP</span>). 
+- **Positive Predictive Value (PPV)**: Probability that following a positive test result, that individual will truly have the specific disease. 
+  - PPV = <span style="color:#9373C0;">TP</span> / (<span style="color:#9373C0;">TP</span> + <span style="color:#E3008C;">FP</span>).
+- **Negative Predictive Value (NPV)**: Probability that following a negative test result, the individual will truly not have that specific disease. 
+  - NPV = <span style="color:#2AA0A4;">TN</span> / (<span style="color:#2AA0A4;">TN</span> + <span style="color:#CA5010;">FN</span>).
+
+### Options 
+
+We have provided multiple options for you to choose which classification you would like to run. The `sens_spec` can be: 
+
+- "balanced" (default)
+- "85% sensitivity"
+- "90% sensitivity"
+- "95% sensitivity"
+- "85% specificity"
+- "90% specificity"
+- "95% specificity"
+
+
+### Which sensitivity/specificity threshold do I use? 
+The **balanced** sensitivity / specificity is when both metrics are at their highest and correspond to 81% each. 
+
+**High sensitivity with lower specificity** maximises the identification and treatment of all likely hypnozoite carriers at the cost of some over-treatment. As radical cure carries a risk of haemolysis in G6PD-deficient individuals10 and G6PD screening can add a substantial burden to healthcare costs, operational use of a high-sensitivity, low-specificity approach is unlikely. 
+
+**High specificity with lower sensitivity** is suited for surveillance settings and aims to correctly identify non-carriers and minimise treatment of uninfected individual, while the impact of false negatives can be mitigated by increasing survey size. 
+
+## Applying the Random Forest  
+
+```{r}
+classifyResults_output <- classifyResults(
+  mfi_to_rau_output, 
+  algorithm_type = "antibody_model", 
+  sens_spec = "balanced", 
+  qc_results
+)
+```
+
+The results from the classification are displayed in a table. The exposure status (seropositive/seronegative) is displayed for each sample. 
+
+To form an educated guess about the seropositivity/exposure status for your samples, take into consideration all relevant epidemiological information that you may have available to you (e.g. time since possible exposure, timing of sampling with respect to incidence of *P. vivax* infections/cases) and explore the results using the classifier/s.
+
+```{r}
+#| exec: false 
+#| eval: false
+classifyResults_output
+```
+
+```{r}
+#| echo: false
+classifyResults_output %>% 
+  kable() %>% 
+  scroll_box(width = "100%", height = "200px")
+```
+
+You can visualise these results using the `ggplot2` R package, loaded previously when we ran the `library(tidyverse)` line. 
+
+```{r}
+classifyResults_output %>%
+  pivot_longer(
+    -c(SampleID, Plate, QC_total, pred_class_max),
+    names_to = "Antigen",
+    values_to = "RAU"
+  )  %>%
+  ggplot(aes(x = pred_class_max, y = RAU, fill = pred_class_max)) +
+  geom_boxplot() +
+  scale_y_log10() +
+  scale_fill_manual(values = c(seronegative = "#878787", seropositive = "#d6604d")) +
+  labs(
+    x = "Classification",
+    y = "RAU",
+    fill = "Classification"
+  ) +
+  facet_grid(~Antigen) +
+  theme_bw() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+You can also visualise the classification results across multiple sensitivity/specificity thresholds using the `plotBoxPlotClassification()` function. From here you can choose a specific threshold to visualise. 
+
+```{r}
+# Sensitivity/specificity thresholds of interest
+sens_spec_all <- c("balanced", "90% sensitivity", "90% specificity")
+
+# Classify results across all thresholds
+all_classifications <- purrr::map_dfr(sens_spec_all, ~{
+   classifyResults(
+     mfi_to_rau_output = mfi_to_rau_output,
+     algorithm_type = "antibody_model",
+     sens_spec = .x,
+     qc_results = qc_results
+   ) |>
+   as.data.frame() |>
+   dplyr::mutate(sens_spec = .x)
+ })
+
+# Plot classification for a single threshold
+plotBoxPlotClassification(all_classifications, "balanced")
+```
+
+Here are the results of all classification thresholds explored in the PvSeroApp: balanced, 90% sensitivity and 90% specificity. The N's for the random forest model classifications based on these classifications are displayed.
+
+## Customisations
+
+For more customisations on how to manipulate your `ggplot2` see the manual [here](https://ggplot2.tidyverse.org/) or the book [@ggplot2]. 

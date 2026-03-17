@@ -36,11 +36,13 @@ book:
       - part: "Data Exploration"
         chapters:
           - code/std_curves.qmd
+          - code/counts.qmd
           - code/mfi_rau.qmd
           - code/classification.qmd
   appendices:
-    - code/tools.qmd
-    - code/resources.qmd
+    - code/references.qmd
+    # - code/tools.qmd
+    # - code/resources.qmd
     # - code/plotting.qmd
     - code/FAQs.qmd
 
