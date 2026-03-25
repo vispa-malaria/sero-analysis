@@ -40,11 +40,10 @@ book:
           - code/mfi_rau.qmd
           - code/classification.qmd
   appendices:
-    - code/references.qmd
-    # - code/tools.qmd
-    # - code/resources.qmd
-    # - code/plotting.qmd
     - code/FAQs.qmd
+    - code/references.qmd
+    - code/resources.qmd
+    # - code/plotting.qmd
 
 bibliography: references.bib
 

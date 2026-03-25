@@ -1,3 +1,21 @@
 # Resources 
 
-To be added. 
+::: {.callout-note}
+## If you are new to R: 
+
+* [WEHI R Course Book](https://kzeglinski.github.io/new_wehi_r_course/)
+* [R for Data Science](https://r4ds.had.co.nz/)
+* [R for Graduate Students](https://bookdown.org/yih_huynh/Guide-to-R-Book/)
+* [R for Health Data Science](https://argoshare.is.ed.ac.uk/healthyr_book/)
+* [The Tidyverse](https://r-unimelb.gitbook.io/rbook/into-the-tidyverse/the-tidyverse)
+
+::: 
+
+::: {.callout-note}
+## For more advanced or specific R coding: 
+
+* [ggplot2: Elegant Graphics for Data Analysis (3e)](https://ggplot2-book.org/)
+* [Be Awesome in ggplot2: A Practical Guide to be Highly Effective - R software and data visualization](https://www.sthda.com/english/wiki/be-awesome-in-ggplot2-a-practical-guide-to-be-highly-effective-r-software-and-data-visualization)
+* [Crissy Robert's Code Book](https://chrissyhroberts.github.io/Code_Book/)
+
+:::
