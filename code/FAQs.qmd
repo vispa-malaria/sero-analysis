@@ -29,6 +29,8 @@ If you are using R via RStudio, then when you load the SeroTrackR package it may
 If it does not prompt you automatically, or if you are using another platform to use R, then use the code below: 
 
 ```{r}
+#| exec: false
+#| eval: false
 setup <- function(){
   needed <- c(
     # Imports: Required 
