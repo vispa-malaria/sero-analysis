@@ -437,6 +437,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#is-there-capability-to-run-this-without-internet" id="toc-is-there-capability-to-run-this-without-internet" class="nav-link" data-scroll-target="#is-there-capability-to-run-this-without-internet"><span class="header-section-number">A.4</span> Is there capability to run this without internet?</a></li>
   <li><a href="#i-have-multiple-plate-layout-files.-how-can-i-input-them" id="toc-i-have-multiple-plate-layout-files.-how-can-i-input-them" class="nav-link" data-scroll-target="#i-have-multiple-plate-layout-files.-how-can-i-input-them"><span class="header-section-number">A.5</span> I have multiple plate layout files. How can I input them?</a></li>
   <li><a href="#i-have-multiple-luminex-data-types-id-like-to-analyse.-how-can-i-do-this" id="toc-i-have-multiple-luminex-data-types-id-like-to-analyse.-how-can-i-do-this" class="nav-link" data-scroll-target="#i-have-multiple-luminex-data-types-id-like-to-analyse.-how-can-i-do-this"><span class="header-section-number">A.6</span> I have multiple Luminex data types I’d like to analyse. How can I do this?</a></li>
+  <li><a href="#how-can-i-count-the-number-of-seropositive-and-seronegative-samples" id="toc-how-can-i-count-the-number-of-seropositive-and-seronegative-samples" class="nav-link" data-scroll-target="#how-can-i-count-the-number-of-seropositive-and-seronegative-samples"><span class="header-section-number">A.7</span> How can I count the number of seropositive and seronegative samples?</a></li>
   </ul>
 </nav>
 </nav>
@@ -668,17 +669,97 @@ Important
 <span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>qc_results <span class="ot">&lt;-</span> <span class="fu">runQC</span>(</span>
 <span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">sero_data =</span> sero_data_merged, </span>
-<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">plate_list =</span> all_plate_layout</span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">plate_list =</span> plate_list_all</span>
 <span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>mfi_to_rau_output <span class="ot">&lt;-</span> <span class="fu">MFItoRAU</span>(</span>
 <span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">sero_data =</span> sero_data_merged,</span>
-<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">plate_list =</span> all_plate_layout, </span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">plate_list =</span> plate_list_all, </span>
 <span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">qc_results =</span> qc_results, </span>
 <span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">std_point =</span> <span class="dv">10</span></span>
 <span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb21-17"><a href="#cb21-17" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb21-18"><a href="#cb21-18" aria-hidden="true" tabindex="-1"></a><span class="co"># etc.. </span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="how-can-i-count-the-number-of-seropositive-and-seronegative-samples" class="level2" data-number="A.7">
+<h2 data-number="A.7" class="anchored" data-anchor-id="how-can-i-count-the-number-of-seropositive-and-seronegative-samples"><span class="header-section-number">A.7</span> How can I count the number of seropositive and seronegative samples?</h2>
+<p>To do this, use the template code below, assuming that you have followed the steps outlined <a href="../code/pvseroapp.html">here</a>.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>classifyResults_output <span class="sc">%&gt;%</span> </span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(pred_class_max)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2 × 2
+  pred_class_max     n
+  &lt;fct&gt;          &lt;int&gt;
+1 seronegative      43
+2 seropositive     209</code></pre>
+</div>
+</div>
+<p>To calculate the serostatus PER PLATE:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>classifyResults_output <span class="sc">%&gt;%</span> </span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(Plate, pred_class_max)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 3
+  Plate  pred_class_max     n
+  &lt;chr&gt;  &lt;fct&gt;          &lt;int&gt;
+1 plate1 seronegative       9
+2 plate1 seropositive      75
+3 plate2 seronegative      17
+4 plate2 seropositive      67
+5 plate3 seronegative      17
+6 plate3 seropositive      67</code></pre>
+</div>
+</div>
+<p>To calculate the <strong>percentage</strong> of the serostatus per plate:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>classifyResults_output <span class="sc">%&gt;%</span> </span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(Plate, pred_class_max) <span class="sc">%&gt;%</span> </span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Plate) <span class="sc">%&gt;%</span> </span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Percent =</span> <span class="fu">round</span>(<span class="dv">100</span> <span class="sc">*</span> n <span class="sc">/</span> <span class="fu">sum</span>(n), <span class="dv">1</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 4
+# Groups:   Plate [3]
+  Plate  pred_class_max     n Percent
+  &lt;chr&gt;  &lt;fct&gt;          &lt;int&gt;   &lt;dbl&gt;
+1 plate1 seronegative       9    10.7
+2 plate1 seropositive      75    89.3
+3 plate2 seronegative      17    20.2
+4 plate2 seropositive      67    79.8
+5 plate3 seronegative      17    20.2
+6 plate3 seropositive      67    79.8</code></pre>
+</div>
+</div>
+<p>You can do some clever data wrangling to make the table look like this:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>classifyResults_output <span class="sc">%&gt;%</span> </span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Count our serostatus by plate </span></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(Plate, pred_class_max) <span class="sc">%&gt;%</span> </span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Plate) <span class="sc">%&gt;%</span> </span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Calculate serostatus prevalence for each plate as a percentage </span></span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">Percent =</span> <span class="fu">round</span>(<span class="dv">100</span> <span class="sc">*</span> n <span class="sc">/</span> <span class="fu">sum</span>(n), <span class="dv">1</span>),</span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Create new variable "Count" to make it easier to interpret </span></span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">Count =</span> <span class="fu">paste0</span>(n, <span class="st">" ("</span>, Percent, <span class="st">"%)"</span>)</span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Remove the "Percent" and "n" columns as they are unnecessary now </span></span>
+<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="sc">-</span><span class="fu">c</span>(Percent, n)) <span class="sc">%&gt;%</span> </span>
+<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Create cleaner table to view each serostatus type as a column </span></span>
+<span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(</span>
+<span id="cb28-15"><a href="#cb28-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">id_cols =</span> Plate,</span>
+<span id="cb28-16"><a href="#cb28-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_from =</span> pred_class_max, </span>
+<span id="cb28-17"><a href="#cb28-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_from =</span> Count</span>
+<span id="cb28-18"><a href="#cb28-18" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 3
+# Groups:   Plate [3]
+  Plate  seronegative seropositive
+  &lt;chr&gt;  &lt;chr&gt;        &lt;chr&gt;       
+1 plate1 9 (10.7%)    75 (89.3%)  
+2 plate2 17 (20.2%)   67 (79.8%)  
+3 plate3 17 (20.2%)   67 (79.8%)  </code></pre>
+</div>
 </div>
 
 
@@ -1163,271 +1244,364 @@ Important
       </a>
   </div>
 </nav><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu"># FAQs</span></span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="fu">## How do I install R packages other than `SeroTrackR`? </span></span>
-<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>:::{.callout-success}</span>
-<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>The key package that you will need to be able to run the <span class="in">`SeroTrackR`</span> R package and perform any other subsequent analyses is the <span class="in">`tidyverse`</span> R packages. </span>
-<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a><span class="co">#| exec: false</span></span>
-<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
-<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"tidyverse"</span>)</span>
-<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a>Then once you have installed the tidyverse meta-package, then you load the library in as below: </span>
-<span id="cb22-17"><a href="#cb22-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-20"><a href="#cb22-20" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb22-21"><a href="#cb22-21" aria-hidden="true" tabindex="-1"></a><span class="co">#| exec: false</span></span>
-<span id="cb22-22"><a href="#cb22-22" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
-<span id="cb22-23"><a href="#cb22-23" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb22-24"><a href="#cb22-24" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb22-25"><a href="#cb22-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-26"><a href="#cb22-26" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb22-27"><a href="#cb22-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-28"><a href="#cb22-28" aria-hidden="true" tabindex="-1"></a>There **are many** dependencies that the <span class="in">`SeroTrackR`</span> R package relies on. These packages help us to wrangle our data, process our MFI data into RAU, apply the machine learning classification algorithm, and create PDF reports. </span>
-<span id="cb22-29"><a href="#cb22-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-30"><a href="#cb22-30" aria-hidden="true" tabindex="-1"></a>:::{.callout-success}</span>
-<span id="cb22-31"><a href="#cb22-31" aria-hidden="true" tabindex="-1"></a>If you are using R via RStudio, then when you load the SeroTrackR package it may prompt you to install all of these other files. Select yes if that is the case. </span>
-<span id="cb22-32"><a href="#cb22-32" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-33"><a href="#cb22-33" aria-hidden="true" tabindex="-1"></a>If it does not prompt you automatically, or if you are using another platform to use R, then use the code below: </span>
-<span id="cb22-34"><a href="#cb22-34" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-37"><a href="#cb22-37" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb22-38"><a href="#cb22-38" aria-hidden="true" tabindex="-1"></a><span class="co">#| exec: false</span></span>
-<span id="cb22-39"><a href="#cb22-39" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
-<span id="cb22-40"><a href="#cb22-40" aria-hidden="true" tabindex="-1"></a>setup <span class="ot">&lt;-</span> <span class="cf">function</span>(){</span>
-<span id="cb22-41"><a href="#cb22-41" aria-hidden="true" tabindex="-1"></a>  needed <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
-<span id="cb22-42"><a href="#cb22-42" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Imports: Required </span></span>
-<span id="cb22-43"><a href="#cb22-43" aria-hidden="true" tabindex="-1"></a>    <span class="st">"dplyr"</span>, <span class="st">"drc"</span>, <span class="st">"forcats"</span>, <span class="st">"ggplot2"</span>, <span class="st">"here"</span>, <span class="st">"janitor"</span>, </span>
-<span id="cb22-44"><a href="#cb22-44" aria-hidden="true" tabindex="-1"></a>    <span class="st">"kableExtra"</span>, <span class="st">"knitr"</span>, <span class="st">"magrittr"</span>, <span class="st">"openxlsx"</span>, <span class="st">"parsnip"</span>, </span>
-<span id="cb22-45"><a href="#cb22-45" aria-hidden="true" tabindex="-1"></a>    <span class="st">"purrr"</span>, <span class="st">"ranger"</span>, <span class="st">"readr"</span>, <span class="st">"readxl"</span>, <span class="st">"rmarkdown"</span>, <span class="st">"stats"</span>, </span>
-<span id="cb22-46"><a href="#cb22-46" aria-hidden="true" tabindex="-1"></a>    <span class="st">"stringr"</span>, <span class="st">"tidyr"</span>, <span class="st">"tidyselect"</span>, <span class="st">"utils"</span>, <span class="st">"workflows"</span>, </span>
-<span id="cb22-47"><a href="#cb22-47" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Imports: Suggested</span></span>
-<span id="cb22-48"><a href="#cb22-48" aria-hidden="true" tabindex="-1"></a>    <span class="st">"glue"</span>, <span class="st">"htmltools"</span>, <span class="st">"httr"</span>, <span class="st">"jsonlite"</span>, <span class="st">"shiny.fluent"</span>, </span>
-<span id="cb22-49"><a href="#cb22-49" aria-hidden="true" tabindex="-1"></a>    <span class="st">"tidyverse"</span>, <span class="st">"zoo"</span></span>
-<span id="cb22-50"><a href="#cb22-50" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb22-51"><a href="#cb22-51" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(package <span class="cf">in</span> needed){</span>
-<span id="cb22-52"><a href="#cb22-52" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span>(<span class="sc">!</span><span class="fu">sum</span>(<span class="fu">installed.packages</span>() <span class="sc">%in%</span> package)){</span>
-<span id="cb22-53"><a href="#cb22-53" aria-hidden="true" tabindex="-1"></a>      <span class="fu">install.packages</span>(package)</span>
-<span id="cb22-54"><a href="#cb22-54" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb22-55"><a href="#cb22-55" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb22-56"><a href="#cb22-56" aria-hidden="true" tabindex="-1"></a>    <span class="fu">require</span>(package, <span class="at">character.only =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb22-57"><a href="#cb22-57" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb22-58"><a href="#cb22-58" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb22-59"><a href="#cb22-59" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-60"><a href="#cb22-60" aria-hidden="true" tabindex="-1"></a><span class="fu">setup</span>()</span>
-<span id="cb22-61"><a href="#cb22-61" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb22-62"><a href="#cb22-62" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-63"><a href="#cb22-63" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb22-64"><a href="#cb22-64" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-65"><a href="#cb22-65" aria-hidden="true" tabindex="-1"></a><span class="fu">## How do I organise my files? </span></span>
-<span id="cb22-66"><a href="#cb22-66" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-67"><a href="#cb22-67" aria-hidden="true" tabindex="-1"></a>It is best practice to create an <span class="in">`R project (.Rproj)`</span> file and store all of your files in there. A comprehensive tutorial on how to create an R project can be found <span class="co">[</span><span class="ot">here</span><span class="co">](https://kzeglinski.github.io/new_wehi_r_course/session_1.html)</span>. </span>
-<span id="cb22-68"><a href="#cb22-68" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-69"><a href="#cb22-69" aria-hidden="true" tabindex="-1"></a>You can then create a Quarto Markdown Document <span class="in">`data_processing.qmd`</span> inside your R project where you can process all of your serological data. </span>
-<span id="cb22-70"><a href="#cb22-70" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-71"><a href="#cb22-71" aria-hidden="true" tabindex="-1"></a><span class="in">```bash</span></span>
-<span id="cb22-72"><a href="#cb22-72" aria-hidden="true" tabindex="-1"></a><span class="ex">my_R_project</span></span>
-<span id="cb22-73"><a href="#cb22-73" aria-hidden="true" tabindex="-1"></a><span class="ex">└──</span> data/</span>
-<span id="cb22-74"><a href="#cb22-74" aria-hidden="true" tabindex="-1"></a>    <span class="ex">├──</span> raw_data_plate1.csv</span>
-<span id="cb22-75"><a href="#cb22-75" aria-hidden="true" tabindex="-1"></a>    <span class="ex">├──</span> raw_data_plate2.csv</span>
-<span id="cb22-76"><a href="#cb22-76" aria-hidden="true" tabindex="-1"></a>    <span class="ex">├──</span> raw_data_plate3.csv</span>
-<span id="cb22-77"><a href="#cb22-77" aria-hidden="true" tabindex="-1"></a>    <span class="ex">├──</span> platelayout.xlsx</span>
-<span id="cb22-78"><a href="#cb22-78" aria-hidden="true" tabindex="-1"></a><span class="ex">└──</span> results/</span>
-<span id="cb22-79"><a href="#cb22-79" aria-hidden="true" tabindex="-1"></a><span class="ex">└──</span> data_processing.qmd</span>
-<span id="cb22-80"><a href="#cb22-80" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb22-81"><a href="#cb22-81" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-82"><a href="#cb22-82" aria-hidden="true" tabindex="-1"></a><span class="fu">## How can I read in my data?</span></span>
-<span id="cb22-83"><a href="#cb22-83" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-84"><a href="#cb22-84" aria-hidden="true" tabindex="-1"></a>Once you have an <span class="in">`R project (.Rproj)`</span> setup, you can save all of your files into a new folder called "data". Then you can read in your data as follows: </span>
-<span id="cb22-85"><a href="#cb22-85" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-88"><a href="#cb22-88" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb22-89"><a href="#cb22-89" aria-hidden="true" tabindex="-1"></a><span class="co">#| exec: false</span></span>
-<span id="cb22-90"><a href="#cb22-90" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
-<span id="cb22-91"><a href="#cb22-91" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-92"><a href="#cb22-92" aria-hidden="true" tabindex="-1"></a>my_raw_data       <span class="ot">&lt;-</span> <span class="st">"data/my_plate1.csv"</span></span>
-<span id="cb22-93"><a href="#cb22-93" aria-hidden="true" tabindex="-1"></a>my_plate_layout   <span class="ot">&lt;-</span> <span class="st">"data/my_plate_layout.xlsx"</span></span>
-<span id="cb22-94"><a href="#cb22-94" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb22-95"><a href="#cb22-95" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-96"><a href="#cb22-96" aria-hidden="true" tabindex="-1"></a><span class="fu">## Is there capability to run this without internet? </span></span>
-<span id="cb22-97"><a href="#cb22-97" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-98"><a href="#cb22-98" aria-hidden="true" tabindex="-1"></a>You will need internet to initially download the R package and to process certain files which call upon the internet. </span>
-<span id="cb22-99"><a href="#cb22-99" aria-hidden="true" tabindex="-1"></a><span class="co">&lt;!-- However, once this R package is downloaded, you will only ever need internet if you are applying the classification algorithm.  --&gt;</span></span>
-<span id="cb22-100"><a href="#cb22-100" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-101"><a href="#cb22-101" aria-hidden="true" tabindex="-1"></a>::: {.callout-important}</span>
-<span id="cb22-102"><a href="#cb22-102" aria-hidden="true" tabindex="-1"></a>The developers are currently working on how to leverage a safe no-internet option that allows for the incorporation of the classification algorithm. The reason we use the internet at the moment is because the files containing the algorithm are quite **large**. </span>
-<span id="cb22-103"><a href="#cb22-103" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb22-104"><a href="#cb22-104" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-105"><a href="#cb22-105" aria-hidden="true" tabindex="-1"></a><span class="fu">## I have multiple plate layout files. How can I input them?</span></span>
-<span id="cb22-106"><a href="#cb22-106" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-107"><a href="#cb22-107" aria-hidden="true" tabindex="-1"></a>Use the <span class="in">`getPlateLayout()`</span> function to create a master plate layout file to then input into the other functions in the package!</span>
-<span id="cb22-108"><a href="#cb22-108" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-111"><a href="#cb22-111" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb22-112"><a href="#cb22-112" aria-hidden="true" tabindex="-1"></a><span class="co">#| exec: false </span></span>
-<span id="cb22-113"><a href="#cb22-113" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
-<span id="cb22-114"><a href="#cb22-114" aria-hidden="true" tabindex="-1"></a><span class="fu">getPlateLayout</span>(<span class="st">"your/folder/with/plate/layouts/"</span>)</span>
-<span id="cb22-115"><a href="#cb22-115" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb22-116"><a href="#cb22-116" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-117"><a href="#cb22-117" aria-hidden="true" tabindex="-1"></a>Here replace "your/folder/with/plate/layouts/" with the main file that contains your folders. For example, if your folder looks like this:</span>
-<span id="cb22-118"><a href="#cb22-118" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-119"><a href="#cb22-119" aria-hidden="true" tabindex="-1"></a><span class="in">``` bash</span></span>
-<span id="cb22-120"><a href="#cb22-120" aria-hidden="true" tabindex="-1"></a><span class="ex">my_R_project/</span></span>
-<span id="cb22-121"><a href="#cb22-121" aria-hidden="true" tabindex="-1"></a><span class="ex">└──</span> data/</span>
-<span id="cb22-122"><a href="#cb22-122" aria-hidden="true" tabindex="-1"></a>    <span class="ex">├──</span> plate_1/</span>
-<span id="cb22-123"><a href="#cb22-123" aria-hidden="true" tabindex="-1"></a>    <span class="ex">│</span>   ├── raw_magpix_data_plate1.csv</span>
-<span id="cb22-124"><a href="#cb22-124" aria-hidden="true" tabindex="-1"></a>    <span class="ex">│</span>   └── plate_layout_1.xlsx</span>
-<span id="cb22-125"><a href="#cb22-125" aria-hidden="true" tabindex="-1"></a>    <span class="ex">├──</span> plate_2/</span>
-<span id="cb22-126"><a href="#cb22-126" aria-hidden="true" tabindex="-1"></a>    <span class="ex">│</span>   ├── raw_magpix_data_plate2.csv</span>
-<span id="cb22-127"><a href="#cb22-127" aria-hidden="true" tabindex="-1"></a>    <span class="ex">│</span>   └── plate_layout_2.xlsx</span>
-<span id="cb22-128"><a href="#cb22-128" aria-hidden="true" tabindex="-1"></a>    <span class="ex">└──</span> plate_3/</span>
-<span id="cb22-129"><a href="#cb22-129" aria-hidden="true" tabindex="-1"></a>        <span class="ex">├──</span> raw_magpix_data_plate3.csv</span>
-<span id="cb22-130"><a href="#cb22-130" aria-hidden="true" tabindex="-1"></a>        <span class="ex">└──</span> plate_layout_3.xlsx</span>
-<span id="cb22-131"><a href="#cb22-131" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb22-132"><a href="#cb22-132" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-133"><a href="#cb22-133" aria-hidden="true" tabindex="-1"></a>you would write:</span>
-<span id="cb22-134"><a href="#cb22-134" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-137"><a href="#cb22-137" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb22-138"><a href="#cb22-138" aria-hidden="true" tabindex="-1"></a><span class="co">#| exec: false </span></span>
-<span id="cb22-139"><a href="#cb22-139" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
-<span id="cb22-140"><a href="#cb22-140" aria-hidden="true" tabindex="-1"></a><span class="fu">getPlateLayout</span>(<span class="st">"data/"</span>)</span>
-<span id="cb22-141"><a href="#cb22-141" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb22-142"><a href="#cb22-142" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-143"><a href="#cb22-143" aria-hidden="true" tabindex="-1"></a>you could ALSO write:</span>
-<span id="cb22-144"><a href="#cb22-144" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-147"><a href="#cb22-147" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb22-148"><a href="#cb22-148" aria-hidden="true" tabindex="-1"></a><span class="co">#| exec: false </span></span>
-<span id="cb22-149"><a href="#cb22-149" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
-<span id="cb22-150"><a href="#cb22-150" aria-hidden="true" tabindex="-1"></a><span class="fu">getPlateLayout</span>()</span>
-<span id="cb22-151"><a href="#cb22-151" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb22-152"><a href="#cb22-152" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-153"><a href="#cb22-153" aria-hidden="true" tabindex="-1"></a>OR:</span>
-<span id="cb22-154"><a href="#cb22-154" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-157"><a href="#cb22-157" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb22-158"><a href="#cb22-158" aria-hidden="true" tabindex="-1"></a><span class="co">#| exec: false</span></span>
-<span id="cb22-159"><a href="#cb22-159" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
-<span id="cb22-160"><a href="#cb22-160" aria-hidden="true" tabindex="-1"></a><span class="fu">getPlateLayout</span>(<span class="at">folder_path =</span> <span class="fu">c</span>(<span class="st">"plate_layout_1.xlsx"</span>, <span class="st">"plate_layout_2.xlsx"</span>, <span class="st">"plate_layout_3.xlsx"</span>))</span>
-<span id="cb22-161"><a href="#cb22-161" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb22-162"><a href="#cb22-162" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-163"><a href="#cb22-163" aria-hidden="true" tabindex="-1"></a><span class="fu">## I have multiple Luminex data types I'd like to analyse. How can I do this?</span></span>
-<span id="cb22-164"><a href="#cb22-164" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-165"><a href="#cb22-165" aria-hidden="true" tabindex="-1"></a>If you have, for example, both Bio-Plex and MAGPIX files and would like to analyse them both, then you can do some clever data manipulation as below: </span>
-<span id="cb22-166"><a href="#cb22-166" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-167"><a href="#cb22-167" aria-hidden="true" tabindex="-1"></a>*Note that in this example, there is one plate layout that contains all files in it. But the same idea can apply to <span class="in">`readPlateLayout()`</span>. </span>
-<span id="cb22-168"><a href="#cb22-168" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-169"><a href="#cb22-169" aria-hidden="true" tabindex="-1"></a>**Input your Bio-Plex file/s**: </span>
-<span id="cb22-170"><a href="#cb22-170" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-171"><a href="#cb22-171" aria-hidden="true" tabindex="-1"></a>Using a reproducible example: </span>
-<span id="cb22-172"><a href="#cb22-172" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-175"><a href="#cb22-175" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb22-176"><a href="#cb22-176" aria-hidden="true" tabindex="-1"></a><span class="co">#| message: false</span></span>
-<span id="cb22-177"><a href="#cb22-177" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
-<span id="cb22-178"><a href="#cb22-178" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(SeroTrackR)</span>
-<span id="cb22-179"><a href="#cb22-179" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb22-180"><a href="#cb22-180" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-181"><a href="#cb22-181" aria-hidden="true" tabindex="-1"></a>bioplex_raw_plates <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
-<span id="cb22-182"><a href="#cb22-182" aria-hidden="true" tabindex="-1"></a>  <span class="fu">system.file</span>(<span class="st">"extdata"</span>, <span class="st">"example_BioPlex_plate1.xlsx"</span>, <span class="at">package =</span> <span class="st">"SeroTrackR"</span>),</span>
-<span id="cb22-183"><a href="#cb22-183" aria-hidden="true" tabindex="-1"></a>  <span class="fu">system.file</span>(<span class="st">"extdata"</span>, <span class="st">"example_BioPlex_plate2.xlsx"</span>, <span class="at">package =</span> <span class="st">"SeroTrackR"</span>)</span>
-<span id="cb22-184"><a href="#cb22-184" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb22-185"><a href="#cb22-185" aria-hidden="true" tabindex="-1"></a>all_plate_layout <span class="ot">&lt;-</span> <span class="fu">system.file</span>(<span class="st">"extdata"</span>, <span class="st">"example_platelayout_1.xlsx"</span>, <span class="at">package =</span> <span class="st">"SeroTrackR"</span>)</span>
-<span id="cb22-186"><a href="#cb22-186" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb22-187"><a href="#cb22-187" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-188"><a href="#cb22-188" aria-hidden="true" tabindex="-1"></a>For your data: </span>
-<span id="cb22-189"><a href="#cb22-189" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-192"><a href="#cb22-192" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb22-193"><a href="#cb22-193" aria-hidden="true" tabindex="-1"></a><span class="co">#| exec: false</span></span>
-<span id="cb22-194"><a href="#cb22-194" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
-<span id="cb22-195"><a href="#cb22-195" aria-hidden="true" tabindex="-1"></a>bioplex_raw_plates <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
-<span id="cb22-196"><a href="#cb22-196" aria-hidden="true" tabindex="-1"></a>  <span class="st">"data/example_BioPlex_plate1.xlsx"</span>, </span>
-<span id="cb22-197"><a href="#cb22-197" aria-hidden="true" tabindex="-1"></a>  <span class="st">"data/example_BioPlex_plate2.xlsx"</span></span>
-<span id="cb22-198"><a href="#cb22-198" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb22-199"><a href="#cb22-199" aria-hidden="true" tabindex="-1"></a>all_plate_layout <span class="ot">&lt;-</span> <span class="st">"data/example_platelayout_1.xlsx"</span> </span>
-<span id="cb22-200"><a href="#cb22-200" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb22-201"><a href="#cb22-201" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-202"><a href="#cb22-202" aria-hidden="true" tabindex="-1"></a>**Input your MAGPIX file/s**: </span>
-<span id="cb22-203"><a href="#cb22-203" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-204"><a href="#cb22-204" aria-hidden="true" tabindex="-1"></a>Using a reproducible example: </span>
-<span id="cb22-205"><a href="#cb22-205" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-208"><a href="#cb22-208" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb22-209"><a href="#cb22-209" aria-hidden="true" tabindex="-1"></a>magpix_raw_plate     <span class="ot">&lt;-</span> <span class="fu">system.file</span>(<span class="st">"extdata"</span>, <span class="st">"example_MAGPIX_plate3.csv"</span>, <span class="at">package =</span> <span class="st">"SeroTrackR"</span>)</span>
-<span id="cb22-210"><a href="#cb22-210" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb22-211"><a href="#cb22-211" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-212"><a href="#cb22-212" aria-hidden="true" tabindex="-1"></a>For your data: </span>
-<span id="cb22-213"><a href="#cb22-213" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-216"><a href="#cb22-216" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb22-217"><a href="#cb22-217" aria-hidden="true" tabindex="-1"></a><span class="co">#| exec: false</span></span>
-<span id="cb22-218"><a href="#cb22-218" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
-<span id="cb22-219"><a href="#cb22-219" aria-hidden="true" tabindex="-1"></a>magpix_raw_plate      <span class="ot">&lt;-</span> <span class="st">"data/example_MAGPIX_plate3.csv"</span></span>
-<span id="cb22-220"><a href="#cb22-220" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb22-221"><a href="#cb22-221" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-222"><a href="#cb22-222" aria-hidden="true" tabindex="-1"></a>**Read the serological data files in**: </span>
-<span id="cb22-223"><a href="#cb22-223" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-226"><a href="#cb22-226" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb22-227"><a href="#cb22-227" aria-hidden="true" tabindex="-1"></a><span class="co"># Serological data</span></span>
-<span id="cb22-228"><a href="#cb22-228" aria-hidden="true" tabindex="-1"></a>bioplex_sero_data <span class="ot">&lt;-</span> <span class="fu">readSeroData</span>(</span>
-<span id="cb22-229"><a href="#cb22-229" aria-hidden="true" tabindex="-1"></a>  <span class="at">raw_data =</span> bioplex_raw_plates,</span>
-<span id="cb22-230"><a href="#cb22-230" aria-hidden="true" tabindex="-1"></a>  <span class="at">platform =</span> <span class="st">"bioplex"</span></span>
-<span id="cb22-231"><a href="#cb22-231" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb22-232"><a href="#cb22-232" aria-hidden="true" tabindex="-1"></a>magpix_sero_data <span class="ot">&lt;-</span> <span class="fu">readSeroData</span>(</span>
-<span id="cb22-233"><a href="#cb22-233" aria-hidden="true" tabindex="-1"></a>  <span class="at">raw_data =</span> magpix_raw_plate,</span>
-<span id="cb22-234"><a href="#cb22-234" aria-hidden="true" tabindex="-1"></a>  <span class="at">platform =</span> <span class="st">"magpix"</span>, </span>
-<span id="cb22-235"><a href="#cb22-235" aria-hidden="true" tabindex="-1"></a>  <span class="at">version =</span> <span class="st">"4.2"</span></span>
-<span id="cb22-236"><a href="#cb22-236" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb22-237"><a href="#cb22-237" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb22-238"><a href="#cb22-238" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-239"><a href="#cb22-239" aria-hidden="true" tabindex="-1"></a>**Merge the files together**: </span>
-<span id="cb22-240"><a href="#cb22-240" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-243"><a href="#cb22-243" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb22-244"><a href="#cb22-244" aria-hidden="true" tabindex="-1"></a>sero_data_merged <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
-<span id="cb22-245"><a href="#cb22-245" aria-hidden="true" tabindex="-1"></a><span class="co"># data_raw </span></span>
-<span id="cb22-246"><a href="#cb22-246" aria-hidden="true" tabindex="-1"></a>sero_data_merged<span class="sc">$</span>data_raw <span class="ot">&lt;-</span> bioplex_sero_data<span class="sc">$</span>data_raw <span class="sc">%&gt;%</span> </span>
-<span id="cb22-247"><a href="#cb22-247" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(magpix_sero_data<span class="sc">$</span>data_raw)</span>
-<span id="cb22-248"><a href="#cb22-248" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-249"><a href="#cb22-249" aria-hidden="true" tabindex="-1"></a><span class="co"># results </span></span>
-<span id="cb22-250"><a href="#cb22-250" aria-hidden="true" tabindex="-1"></a>sero_data_merged<span class="sc">$</span>results <span class="ot">&lt;-</span> bioplex_sero_data<span class="sc">$</span>results <span class="sc">%&gt;%</span> </span>
-<span id="cb22-251"><a href="#cb22-251" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(magpix_sero_data<span class="sc">$</span>results)</span>
-<span id="cb22-252"><a href="#cb22-252" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-253"><a href="#cb22-253" aria-hidden="true" tabindex="-1"></a><span class="co"># counts </span></span>
-<span id="cb22-254"><a href="#cb22-254" aria-hidden="true" tabindex="-1"></a>sero_data_merged<span class="sc">$</span>counts <span class="ot">&lt;-</span> bioplex_sero_data<span class="sc">$</span>counts <span class="sc">%&gt;%</span> </span>
-<span id="cb22-255"><a href="#cb22-255" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(magpix_sero_data<span class="sc">$</span>counts)</span>
-<span id="cb22-256"><a href="#cb22-256" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-257"><a href="#cb22-257" aria-hidden="true" tabindex="-1"></a><span class="co"># blanks</span></span>
-<span id="cb22-258"><a href="#cb22-258" aria-hidden="true" tabindex="-1"></a>sero_data_merged<span class="sc">$</span>blanks <span class="ot">&lt;-</span> bioplex_sero_data<span class="sc">$</span>blanks <span class="sc">%&gt;%</span> </span>
-<span id="cb22-259"><a href="#cb22-259" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(magpix_sero_data<span class="sc">$</span>blanks)</span>
-<span id="cb22-260"><a href="#cb22-260" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-261"><a href="#cb22-261" aria-hidden="true" tabindex="-1"></a><span class="co"># stds</span></span>
-<span id="cb22-262"><a href="#cb22-262" aria-hidden="true" tabindex="-1"></a>sero_data_merged<span class="sc">$</span>stds <span class="ot">&lt;-</span> bioplex_sero_data<span class="sc">$</span>stds <span class="sc">%&gt;%</span> </span>
-<span id="cb22-263"><a href="#cb22-263" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(magpix_sero_data<span class="sc">$</span>stds)</span>
-<span id="cb22-264"><a href="#cb22-264" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-265"><a href="#cb22-265" aria-hidden="true" tabindex="-1"></a><span class="co"># run </span></span>
-<span id="cb22-266"><a href="#cb22-266" aria-hidden="true" tabindex="-1"></a>sero_data_merged<span class="sc">$</span>run <span class="ot">&lt;-</span> bioplex_sero_data<span class="sc">$</span>run <span class="sc">%&gt;%</span> </span>
-<span id="cb22-267"><a href="#cb22-267" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(magpix_sero_data<span class="sc">$</span>run)</span>
-<span id="cb22-268"><a href="#cb22-268" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb22-269"><a href="#cb22-269" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-270"><a href="#cb22-270" aria-hidden="true" tabindex="-1"></a>**Continue the rest of the pipeline**: </span>
-<span id="cb22-271"><a href="#cb22-271" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-274"><a href="#cb22-274" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb22-275"><a href="#cb22-275" aria-hidden="true" tabindex="-1"></a><span class="co">#| exec: false</span></span>
-<span id="cb22-276"><a href="#cb22-276" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false </span></span>
-<span id="cb22-277"><a href="#cb22-277" aria-hidden="true" tabindex="-1"></a>plate_list_all  <span class="ot">&lt;-</span> <span class="fu">readPlateLayout</span>(</span>
-<span id="cb22-278"><a href="#cb22-278" aria-hidden="true" tabindex="-1"></a>  <span class="at">plate_layout =</span> all_plate_layout, </span>
-<span id="cb22-279"><a href="#cb22-279" aria-hidden="true" tabindex="-1"></a>  <span class="at">sero_data =</span> sero_data_merged</span>
-<span id="cb22-280"><a href="#cb22-280" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb22-281"><a href="#cb22-281" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-282"><a href="#cb22-282" aria-hidden="true" tabindex="-1"></a>qc_results <span class="ot">&lt;-</span> <span class="fu">runQC</span>(</span>
-<span id="cb22-283"><a href="#cb22-283" aria-hidden="true" tabindex="-1"></a>  <span class="at">sero_data =</span> sero_data_merged, </span>
-<span id="cb22-284"><a href="#cb22-284" aria-hidden="true" tabindex="-1"></a>  <span class="at">plate_list =</span> all_plate_layout</span>
-<span id="cb22-285"><a href="#cb22-285" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb22-286"><a href="#cb22-286" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-287"><a href="#cb22-287" aria-hidden="true" tabindex="-1"></a>mfi_to_rau_output <span class="ot">&lt;-</span> <span class="fu">MFItoRAU</span>(</span>
-<span id="cb22-288"><a href="#cb22-288" aria-hidden="true" tabindex="-1"></a>  <span class="at">sero_data =</span> sero_data_merged,</span>
-<span id="cb22-289"><a href="#cb22-289" aria-hidden="true" tabindex="-1"></a>  <span class="at">plate_list =</span> all_plate_layout, </span>
-<span id="cb22-290"><a href="#cb22-290" aria-hidden="true" tabindex="-1"></a>  <span class="at">qc_results =</span> qc_results, </span>
-<span id="cb22-291"><a href="#cb22-291" aria-hidden="true" tabindex="-1"></a>  <span class="at">std_point =</span> <span class="dv">10</span></span>
-<span id="cb22-292"><a href="#cb22-292" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb22-293"><a href="#cb22-293" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-294"><a href="#cb22-294" aria-hidden="true" tabindex="-1"></a><span class="co"># etc.. </span></span>
-<span id="cb22-295"><a href="#cb22-295" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb30" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu"># FAQs</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="fu">## How do I install R packages other than `SeroTrackR`? </span></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>:::{.callout-success}</span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>The key package that you will need to be able to run the <span class="in">`SeroTrackR`</span> R package and perform any other subsequent analyses is the <span class="in">`tidyverse`</span> R packages. </span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a><span class="co">#| exec: false</span></span>
+<span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
+<span id="cb30-13"><a href="#cb30-13" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"tidyverse"</span>)</span>
+<span id="cb30-14"><a href="#cb30-14" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb30-15"><a href="#cb30-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-16"><a href="#cb30-16" aria-hidden="true" tabindex="-1"></a>Then once you have installed the tidyverse meta-package, then you load the library in as below: </span>
+<span id="cb30-17"><a href="#cb30-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-20"><a href="#cb30-20" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb30-21"><a href="#cb30-21" aria-hidden="true" tabindex="-1"></a><span class="co">#| exec: false</span></span>
+<span id="cb30-22"><a href="#cb30-22" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
+<span id="cb30-23"><a href="#cb30-23" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb30-24"><a href="#cb30-24" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb30-25"><a href="#cb30-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-26"><a href="#cb30-26" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb30-27"><a href="#cb30-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-28"><a href="#cb30-28" aria-hidden="true" tabindex="-1"></a>There **are many** dependencies that the <span class="in">`SeroTrackR`</span> R package relies on. These packages help us to wrangle our data, process our MFI data into RAU, apply the machine learning classification algorithm, and create PDF reports. </span>
+<span id="cb30-29"><a href="#cb30-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-30"><a href="#cb30-30" aria-hidden="true" tabindex="-1"></a>:::{.callout-success}</span>
+<span id="cb30-31"><a href="#cb30-31" aria-hidden="true" tabindex="-1"></a>If you are using R via RStudio, then when you load the SeroTrackR package it may prompt you to install all of these other files. Select yes if that is the case. </span>
+<span id="cb30-32"><a href="#cb30-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-33"><a href="#cb30-33" aria-hidden="true" tabindex="-1"></a>If it does not prompt you automatically, or if you are using another platform to use R, then use the code below: </span>
+<span id="cb30-34"><a href="#cb30-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-37"><a href="#cb30-37" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb30-38"><a href="#cb30-38" aria-hidden="true" tabindex="-1"></a><span class="co">#| exec: false</span></span>
+<span id="cb30-39"><a href="#cb30-39" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
+<span id="cb30-40"><a href="#cb30-40" aria-hidden="true" tabindex="-1"></a>setup <span class="ot">&lt;-</span> <span class="cf">function</span>(){</span>
+<span id="cb30-41"><a href="#cb30-41" aria-hidden="true" tabindex="-1"></a>  needed <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb30-42"><a href="#cb30-42" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Imports: Required </span></span>
+<span id="cb30-43"><a href="#cb30-43" aria-hidden="true" tabindex="-1"></a>    <span class="st">"dplyr"</span>, <span class="st">"drc"</span>, <span class="st">"forcats"</span>, <span class="st">"ggplot2"</span>, <span class="st">"here"</span>, <span class="st">"janitor"</span>, </span>
+<span id="cb30-44"><a href="#cb30-44" aria-hidden="true" tabindex="-1"></a>    <span class="st">"kableExtra"</span>, <span class="st">"knitr"</span>, <span class="st">"magrittr"</span>, <span class="st">"openxlsx"</span>, <span class="st">"parsnip"</span>, </span>
+<span id="cb30-45"><a href="#cb30-45" aria-hidden="true" tabindex="-1"></a>    <span class="st">"purrr"</span>, <span class="st">"ranger"</span>, <span class="st">"readr"</span>, <span class="st">"readxl"</span>, <span class="st">"rmarkdown"</span>, <span class="st">"stats"</span>, </span>
+<span id="cb30-46"><a href="#cb30-46" aria-hidden="true" tabindex="-1"></a>    <span class="st">"stringr"</span>, <span class="st">"tidyr"</span>, <span class="st">"tidyselect"</span>, <span class="st">"utils"</span>, <span class="st">"workflows"</span>, </span>
+<span id="cb30-47"><a href="#cb30-47" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Imports: Suggested</span></span>
+<span id="cb30-48"><a href="#cb30-48" aria-hidden="true" tabindex="-1"></a>    <span class="st">"glue"</span>, <span class="st">"htmltools"</span>, <span class="st">"httr"</span>, <span class="st">"jsonlite"</span>, <span class="st">"shiny.fluent"</span>, </span>
+<span id="cb30-49"><a href="#cb30-49" aria-hidden="true" tabindex="-1"></a>    <span class="st">"tidyverse"</span>, <span class="st">"zoo"</span></span>
+<span id="cb30-50"><a href="#cb30-50" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb30-51"><a href="#cb30-51" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(package <span class="cf">in</span> needed){</span>
+<span id="cb30-52"><a href="#cb30-52" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span>(<span class="sc">!</span><span class="fu">sum</span>(<span class="fu">installed.packages</span>() <span class="sc">%in%</span> package)){</span>
+<span id="cb30-53"><a href="#cb30-53" aria-hidden="true" tabindex="-1"></a>      <span class="fu">install.packages</span>(package)</span>
+<span id="cb30-54"><a href="#cb30-54" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb30-55"><a href="#cb30-55" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb30-56"><a href="#cb30-56" aria-hidden="true" tabindex="-1"></a>    <span class="fu">require</span>(package, <span class="at">character.only =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb30-57"><a href="#cb30-57" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb30-58"><a href="#cb30-58" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb30-59"><a href="#cb30-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-60"><a href="#cb30-60" aria-hidden="true" tabindex="-1"></a><span class="fu">setup</span>()</span>
+<span id="cb30-61"><a href="#cb30-61" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb30-62"><a href="#cb30-62" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-63"><a href="#cb30-63" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb30-64"><a href="#cb30-64" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-65"><a href="#cb30-65" aria-hidden="true" tabindex="-1"></a><span class="fu">## How do I organise my files? </span></span>
+<span id="cb30-66"><a href="#cb30-66" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-67"><a href="#cb30-67" aria-hidden="true" tabindex="-1"></a>It is best practice to create an <span class="in">`R project (.Rproj)`</span> file and store all of your files in there. A comprehensive tutorial on how to create an R project can be found <span class="co">[</span><span class="ot">here</span><span class="co">](https://kzeglinski.github.io/new_wehi_r_course/session_1.html)</span>. </span>
+<span id="cb30-68"><a href="#cb30-68" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-69"><a href="#cb30-69" aria-hidden="true" tabindex="-1"></a>You can then create a Quarto Markdown Document <span class="in">`data_processing.qmd`</span> inside your R project where you can process all of your serological data. </span>
+<span id="cb30-70"><a href="#cb30-70" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-71"><a href="#cb30-71" aria-hidden="true" tabindex="-1"></a><span class="in">```bash</span></span>
+<span id="cb30-72"><a href="#cb30-72" aria-hidden="true" tabindex="-1"></a><span class="ex">my_R_project</span></span>
+<span id="cb30-73"><a href="#cb30-73" aria-hidden="true" tabindex="-1"></a><span class="ex">└──</span> data/</span>
+<span id="cb30-74"><a href="#cb30-74" aria-hidden="true" tabindex="-1"></a>    <span class="ex">├──</span> raw_data_plate1.csv</span>
+<span id="cb30-75"><a href="#cb30-75" aria-hidden="true" tabindex="-1"></a>    <span class="ex">├──</span> raw_data_plate2.csv</span>
+<span id="cb30-76"><a href="#cb30-76" aria-hidden="true" tabindex="-1"></a>    <span class="ex">├──</span> raw_data_plate3.csv</span>
+<span id="cb30-77"><a href="#cb30-77" aria-hidden="true" tabindex="-1"></a>    <span class="ex">├──</span> platelayout.xlsx</span>
+<span id="cb30-78"><a href="#cb30-78" aria-hidden="true" tabindex="-1"></a><span class="ex">└──</span> results/</span>
+<span id="cb30-79"><a href="#cb30-79" aria-hidden="true" tabindex="-1"></a><span class="ex">└──</span> data_processing.qmd</span>
+<span id="cb30-80"><a href="#cb30-80" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb30-81"><a href="#cb30-81" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-82"><a href="#cb30-82" aria-hidden="true" tabindex="-1"></a><span class="fu">## How can I read in my data?</span></span>
+<span id="cb30-83"><a href="#cb30-83" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-84"><a href="#cb30-84" aria-hidden="true" tabindex="-1"></a>Once you have an <span class="in">`R project (.Rproj)`</span> setup, you can save all of your files into a new folder called "data". Then you can read in your data as follows: </span>
+<span id="cb30-85"><a href="#cb30-85" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-88"><a href="#cb30-88" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb30-89"><a href="#cb30-89" aria-hidden="true" tabindex="-1"></a><span class="co">#| exec: false</span></span>
+<span id="cb30-90"><a href="#cb30-90" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
+<span id="cb30-91"><a href="#cb30-91" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-92"><a href="#cb30-92" aria-hidden="true" tabindex="-1"></a>my_raw_data       <span class="ot">&lt;-</span> <span class="st">"data/my_plate1.csv"</span></span>
+<span id="cb30-93"><a href="#cb30-93" aria-hidden="true" tabindex="-1"></a>my_plate_layout   <span class="ot">&lt;-</span> <span class="st">"data/my_plate_layout.xlsx"</span></span>
+<span id="cb30-94"><a href="#cb30-94" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb30-95"><a href="#cb30-95" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-96"><a href="#cb30-96" aria-hidden="true" tabindex="-1"></a><span class="fu">## Is there capability to run this without internet? </span></span>
+<span id="cb30-97"><a href="#cb30-97" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-98"><a href="#cb30-98" aria-hidden="true" tabindex="-1"></a>You will need internet to initially download the R package and to process certain files which call upon the internet. </span>
+<span id="cb30-99"><a href="#cb30-99" aria-hidden="true" tabindex="-1"></a><span class="co">&lt;!-- However, once this R package is downloaded, you will only ever need internet if you are applying the classification algorithm.  --&gt;</span></span>
+<span id="cb30-100"><a href="#cb30-100" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-101"><a href="#cb30-101" aria-hidden="true" tabindex="-1"></a>::: {.callout-important}</span>
+<span id="cb30-102"><a href="#cb30-102" aria-hidden="true" tabindex="-1"></a>The developers are currently working on how to leverage a safe no-internet option that allows for the incorporation of the classification algorithm. The reason we use the internet at the moment is because the files containing the algorithm are quite **large**. </span>
+<span id="cb30-103"><a href="#cb30-103" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb30-104"><a href="#cb30-104" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-105"><a href="#cb30-105" aria-hidden="true" tabindex="-1"></a><span class="fu">## I have multiple plate layout files. How can I input them?</span></span>
+<span id="cb30-106"><a href="#cb30-106" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-107"><a href="#cb30-107" aria-hidden="true" tabindex="-1"></a>Use the <span class="in">`getPlateLayout()`</span> function to create a master plate layout file to then input into the other functions in the package!</span>
+<span id="cb30-108"><a href="#cb30-108" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-111"><a href="#cb30-111" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb30-112"><a href="#cb30-112" aria-hidden="true" tabindex="-1"></a><span class="co">#| exec: false </span></span>
+<span id="cb30-113"><a href="#cb30-113" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
+<span id="cb30-114"><a href="#cb30-114" aria-hidden="true" tabindex="-1"></a><span class="fu">getPlateLayout</span>(<span class="st">"your/folder/with/plate/layouts/"</span>)</span>
+<span id="cb30-115"><a href="#cb30-115" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb30-116"><a href="#cb30-116" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-117"><a href="#cb30-117" aria-hidden="true" tabindex="-1"></a>Here replace "your/folder/with/plate/layouts/" with the main file that contains your folders. For example, if your folder looks like this:</span>
+<span id="cb30-118"><a href="#cb30-118" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-119"><a href="#cb30-119" aria-hidden="true" tabindex="-1"></a><span class="in">``` bash</span></span>
+<span id="cb30-120"><a href="#cb30-120" aria-hidden="true" tabindex="-1"></a><span class="ex">my_R_project/</span></span>
+<span id="cb30-121"><a href="#cb30-121" aria-hidden="true" tabindex="-1"></a><span class="ex">└──</span> data/</span>
+<span id="cb30-122"><a href="#cb30-122" aria-hidden="true" tabindex="-1"></a>    <span class="ex">├──</span> plate_1/</span>
+<span id="cb30-123"><a href="#cb30-123" aria-hidden="true" tabindex="-1"></a>    <span class="ex">│</span>   ├── raw_magpix_data_plate1.csv</span>
+<span id="cb30-124"><a href="#cb30-124" aria-hidden="true" tabindex="-1"></a>    <span class="ex">│</span>   └── plate_layout_1.xlsx</span>
+<span id="cb30-125"><a href="#cb30-125" aria-hidden="true" tabindex="-1"></a>    <span class="ex">├──</span> plate_2/</span>
+<span id="cb30-126"><a href="#cb30-126" aria-hidden="true" tabindex="-1"></a>    <span class="ex">│</span>   ├── raw_magpix_data_plate2.csv</span>
+<span id="cb30-127"><a href="#cb30-127" aria-hidden="true" tabindex="-1"></a>    <span class="ex">│</span>   └── plate_layout_2.xlsx</span>
+<span id="cb30-128"><a href="#cb30-128" aria-hidden="true" tabindex="-1"></a>    <span class="ex">└──</span> plate_3/</span>
+<span id="cb30-129"><a href="#cb30-129" aria-hidden="true" tabindex="-1"></a>        <span class="ex">├──</span> raw_magpix_data_plate3.csv</span>
+<span id="cb30-130"><a href="#cb30-130" aria-hidden="true" tabindex="-1"></a>        <span class="ex">└──</span> plate_layout_3.xlsx</span>
+<span id="cb30-131"><a href="#cb30-131" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb30-132"><a href="#cb30-132" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-133"><a href="#cb30-133" aria-hidden="true" tabindex="-1"></a>you would write:</span>
+<span id="cb30-134"><a href="#cb30-134" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-137"><a href="#cb30-137" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb30-138"><a href="#cb30-138" aria-hidden="true" tabindex="-1"></a><span class="co">#| exec: false </span></span>
+<span id="cb30-139"><a href="#cb30-139" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
+<span id="cb30-140"><a href="#cb30-140" aria-hidden="true" tabindex="-1"></a><span class="fu">getPlateLayout</span>(<span class="st">"data/"</span>)</span>
+<span id="cb30-141"><a href="#cb30-141" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb30-142"><a href="#cb30-142" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-143"><a href="#cb30-143" aria-hidden="true" tabindex="-1"></a>you could ALSO write:</span>
+<span id="cb30-144"><a href="#cb30-144" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-147"><a href="#cb30-147" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb30-148"><a href="#cb30-148" aria-hidden="true" tabindex="-1"></a><span class="co">#| exec: false </span></span>
+<span id="cb30-149"><a href="#cb30-149" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
+<span id="cb30-150"><a href="#cb30-150" aria-hidden="true" tabindex="-1"></a><span class="fu">getPlateLayout</span>()</span>
+<span id="cb30-151"><a href="#cb30-151" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb30-152"><a href="#cb30-152" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-153"><a href="#cb30-153" aria-hidden="true" tabindex="-1"></a>OR:</span>
+<span id="cb30-154"><a href="#cb30-154" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-157"><a href="#cb30-157" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb30-158"><a href="#cb30-158" aria-hidden="true" tabindex="-1"></a><span class="co">#| exec: false</span></span>
+<span id="cb30-159"><a href="#cb30-159" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
+<span id="cb30-160"><a href="#cb30-160" aria-hidden="true" tabindex="-1"></a><span class="fu">getPlateLayout</span>(<span class="at">folder_path =</span> <span class="fu">c</span>(<span class="st">"plate_layout_1.xlsx"</span>, <span class="st">"plate_layout_2.xlsx"</span>, <span class="st">"plate_layout_3.xlsx"</span>))</span>
+<span id="cb30-161"><a href="#cb30-161" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb30-162"><a href="#cb30-162" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-163"><a href="#cb30-163" aria-hidden="true" tabindex="-1"></a><span class="fu">## I have multiple Luminex data types I'd like to analyse. How can I do this?</span></span>
+<span id="cb30-164"><a href="#cb30-164" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-165"><a href="#cb30-165" aria-hidden="true" tabindex="-1"></a>If you have, for example, both Bio-Plex and MAGPIX files and would like to analyse them both, then you can do some clever data manipulation as below: </span>
+<span id="cb30-166"><a href="#cb30-166" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-167"><a href="#cb30-167" aria-hidden="true" tabindex="-1"></a>*Note that in this example, there is one plate layout that contains all files in it. But the same idea can apply to <span class="in">`readPlateLayout()`</span>. </span>
+<span id="cb30-168"><a href="#cb30-168" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-169"><a href="#cb30-169" aria-hidden="true" tabindex="-1"></a>**Input your Bio-Plex file/s**: </span>
+<span id="cb30-170"><a href="#cb30-170" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-171"><a href="#cb30-171" aria-hidden="true" tabindex="-1"></a>Using a reproducible example: </span>
+<span id="cb30-172"><a href="#cb30-172" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-175"><a href="#cb30-175" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb30-176"><a href="#cb30-176" aria-hidden="true" tabindex="-1"></a><span class="co">#| message: false</span></span>
+<span id="cb30-177"><a href="#cb30-177" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
+<span id="cb30-178"><a href="#cb30-178" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(SeroTrackR)</span>
+<span id="cb30-179"><a href="#cb30-179" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb30-180"><a href="#cb30-180" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-181"><a href="#cb30-181" aria-hidden="true" tabindex="-1"></a>bioplex_raw_plates <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb30-182"><a href="#cb30-182" aria-hidden="true" tabindex="-1"></a>  <span class="fu">system.file</span>(<span class="st">"extdata"</span>, <span class="st">"example_BioPlex_plate1.xlsx"</span>, <span class="at">package =</span> <span class="st">"SeroTrackR"</span>),</span>
+<span id="cb30-183"><a href="#cb30-183" aria-hidden="true" tabindex="-1"></a>  <span class="fu">system.file</span>(<span class="st">"extdata"</span>, <span class="st">"example_BioPlex_plate2.xlsx"</span>, <span class="at">package =</span> <span class="st">"SeroTrackR"</span>)</span>
+<span id="cb30-184"><a href="#cb30-184" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb30-185"><a href="#cb30-185" aria-hidden="true" tabindex="-1"></a>all_plate_layout <span class="ot">&lt;-</span> <span class="fu">system.file</span>(<span class="st">"extdata"</span>, <span class="st">"example_platelayout_1.xlsx"</span>, <span class="at">package =</span> <span class="st">"SeroTrackR"</span>)</span>
+<span id="cb30-186"><a href="#cb30-186" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb30-187"><a href="#cb30-187" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-188"><a href="#cb30-188" aria-hidden="true" tabindex="-1"></a>For your data: </span>
+<span id="cb30-189"><a href="#cb30-189" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-192"><a href="#cb30-192" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb30-193"><a href="#cb30-193" aria-hidden="true" tabindex="-1"></a><span class="co">#| exec: false</span></span>
+<span id="cb30-194"><a href="#cb30-194" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
+<span id="cb30-195"><a href="#cb30-195" aria-hidden="true" tabindex="-1"></a>bioplex_raw_plates <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb30-196"><a href="#cb30-196" aria-hidden="true" tabindex="-1"></a>  <span class="st">"data/example_BioPlex_plate1.xlsx"</span>, </span>
+<span id="cb30-197"><a href="#cb30-197" aria-hidden="true" tabindex="-1"></a>  <span class="st">"data/example_BioPlex_plate2.xlsx"</span></span>
+<span id="cb30-198"><a href="#cb30-198" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb30-199"><a href="#cb30-199" aria-hidden="true" tabindex="-1"></a>all_plate_layout <span class="ot">&lt;-</span> <span class="st">"data/example_platelayout_1.xlsx"</span> </span>
+<span id="cb30-200"><a href="#cb30-200" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb30-201"><a href="#cb30-201" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-202"><a href="#cb30-202" aria-hidden="true" tabindex="-1"></a>**Input your MAGPIX file/s**: </span>
+<span id="cb30-203"><a href="#cb30-203" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-204"><a href="#cb30-204" aria-hidden="true" tabindex="-1"></a>Using a reproducible example: </span>
+<span id="cb30-205"><a href="#cb30-205" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-208"><a href="#cb30-208" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb30-209"><a href="#cb30-209" aria-hidden="true" tabindex="-1"></a>magpix_raw_plate     <span class="ot">&lt;-</span> <span class="fu">system.file</span>(<span class="st">"extdata"</span>, <span class="st">"example_MAGPIX_plate3.csv"</span>, <span class="at">package =</span> <span class="st">"SeroTrackR"</span>)</span>
+<span id="cb30-210"><a href="#cb30-210" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb30-211"><a href="#cb30-211" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-212"><a href="#cb30-212" aria-hidden="true" tabindex="-1"></a>For your data: </span>
+<span id="cb30-213"><a href="#cb30-213" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-216"><a href="#cb30-216" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb30-217"><a href="#cb30-217" aria-hidden="true" tabindex="-1"></a><span class="co">#| exec: false</span></span>
+<span id="cb30-218"><a href="#cb30-218" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
+<span id="cb30-219"><a href="#cb30-219" aria-hidden="true" tabindex="-1"></a>magpix_raw_plate      <span class="ot">&lt;-</span> <span class="st">"data/example_MAGPIX_plate3.csv"</span></span>
+<span id="cb30-220"><a href="#cb30-220" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb30-221"><a href="#cb30-221" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-222"><a href="#cb30-222" aria-hidden="true" tabindex="-1"></a>**Read the serological data files in**: </span>
+<span id="cb30-223"><a href="#cb30-223" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-226"><a href="#cb30-226" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb30-227"><a href="#cb30-227" aria-hidden="true" tabindex="-1"></a><span class="co"># Serological data</span></span>
+<span id="cb30-228"><a href="#cb30-228" aria-hidden="true" tabindex="-1"></a>bioplex_sero_data <span class="ot">&lt;-</span> <span class="fu">readSeroData</span>(</span>
+<span id="cb30-229"><a href="#cb30-229" aria-hidden="true" tabindex="-1"></a>  <span class="at">raw_data =</span> bioplex_raw_plates,</span>
+<span id="cb30-230"><a href="#cb30-230" aria-hidden="true" tabindex="-1"></a>  <span class="at">platform =</span> <span class="st">"bioplex"</span></span>
+<span id="cb30-231"><a href="#cb30-231" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb30-232"><a href="#cb30-232" aria-hidden="true" tabindex="-1"></a>magpix_sero_data <span class="ot">&lt;-</span> <span class="fu">readSeroData</span>(</span>
+<span id="cb30-233"><a href="#cb30-233" aria-hidden="true" tabindex="-1"></a>  <span class="at">raw_data =</span> magpix_raw_plate,</span>
+<span id="cb30-234"><a href="#cb30-234" aria-hidden="true" tabindex="-1"></a>  <span class="at">platform =</span> <span class="st">"magpix"</span>, </span>
+<span id="cb30-235"><a href="#cb30-235" aria-hidden="true" tabindex="-1"></a>  <span class="at">version =</span> <span class="st">"4.2"</span></span>
+<span id="cb30-236"><a href="#cb30-236" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb30-237"><a href="#cb30-237" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb30-238"><a href="#cb30-238" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-239"><a href="#cb30-239" aria-hidden="true" tabindex="-1"></a>**Merge the files together**: </span>
+<span id="cb30-240"><a href="#cb30-240" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-243"><a href="#cb30-243" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb30-244"><a href="#cb30-244" aria-hidden="true" tabindex="-1"></a>sero_data_merged <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
+<span id="cb30-245"><a href="#cb30-245" aria-hidden="true" tabindex="-1"></a><span class="co"># data_raw </span></span>
+<span id="cb30-246"><a href="#cb30-246" aria-hidden="true" tabindex="-1"></a>sero_data_merged<span class="sc">$</span>data_raw <span class="ot">&lt;-</span> bioplex_sero_data<span class="sc">$</span>data_raw <span class="sc">%&gt;%</span> </span>
+<span id="cb30-247"><a href="#cb30-247" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(magpix_sero_data<span class="sc">$</span>data_raw)</span>
+<span id="cb30-248"><a href="#cb30-248" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-249"><a href="#cb30-249" aria-hidden="true" tabindex="-1"></a><span class="co"># results </span></span>
+<span id="cb30-250"><a href="#cb30-250" aria-hidden="true" tabindex="-1"></a>sero_data_merged<span class="sc">$</span>results <span class="ot">&lt;-</span> bioplex_sero_data<span class="sc">$</span>results <span class="sc">%&gt;%</span> </span>
+<span id="cb30-251"><a href="#cb30-251" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(magpix_sero_data<span class="sc">$</span>results)</span>
+<span id="cb30-252"><a href="#cb30-252" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-253"><a href="#cb30-253" aria-hidden="true" tabindex="-1"></a><span class="co"># counts </span></span>
+<span id="cb30-254"><a href="#cb30-254" aria-hidden="true" tabindex="-1"></a>sero_data_merged<span class="sc">$</span>counts <span class="ot">&lt;-</span> bioplex_sero_data<span class="sc">$</span>counts <span class="sc">%&gt;%</span> </span>
+<span id="cb30-255"><a href="#cb30-255" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(magpix_sero_data<span class="sc">$</span>counts)</span>
+<span id="cb30-256"><a href="#cb30-256" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-257"><a href="#cb30-257" aria-hidden="true" tabindex="-1"></a><span class="co"># blanks</span></span>
+<span id="cb30-258"><a href="#cb30-258" aria-hidden="true" tabindex="-1"></a>sero_data_merged<span class="sc">$</span>blanks <span class="ot">&lt;-</span> bioplex_sero_data<span class="sc">$</span>blanks <span class="sc">%&gt;%</span> </span>
+<span id="cb30-259"><a href="#cb30-259" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(magpix_sero_data<span class="sc">$</span>blanks)</span>
+<span id="cb30-260"><a href="#cb30-260" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-261"><a href="#cb30-261" aria-hidden="true" tabindex="-1"></a><span class="co"># stds</span></span>
+<span id="cb30-262"><a href="#cb30-262" aria-hidden="true" tabindex="-1"></a>sero_data_merged<span class="sc">$</span>stds <span class="ot">&lt;-</span> bioplex_sero_data<span class="sc">$</span>stds <span class="sc">%&gt;%</span> </span>
+<span id="cb30-263"><a href="#cb30-263" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(magpix_sero_data<span class="sc">$</span>stds)</span>
+<span id="cb30-264"><a href="#cb30-264" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-265"><a href="#cb30-265" aria-hidden="true" tabindex="-1"></a><span class="co"># run </span></span>
+<span id="cb30-266"><a href="#cb30-266" aria-hidden="true" tabindex="-1"></a>sero_data_merged<span class="sc">$</span>run <span class="ot">&lt;-</span> bioplex_sero_data<span class="sc">$</span>run <span class="sc">%&gt;%</span> </span>
+<span id="cb30-267"><a href="#cb30-267" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(magpix_sero_data<span class="sc">$</span>run)</span>
+<span id="cb30-268"><a href="#cb30-268" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb30-269"><a href="#cb30-269" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-270"><a href="#cb30-270" aria-hidden="true" tabindex="-1"></a>**Continue the rest of the pipeline**: </span>
+<span id="cb30-271"><a href="#cb30-271" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-274"><a href="#cb30-274" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb30-275"><a href="#cb30-275" aria-hidden="true" tabindex="-1"></a><span class="co">#| exec: false</span></span>
+<span id="cb30-276"><a href="#cb30-276" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false </span></span>
+<span id="cb30-277"><a href="#cb30-277" aria-hidden="true" tabindex="-1"></a>plate_list_all  <span class="ot">&lt;-</span> <span class="fu">readPlateLayout</span>(</span>
+<span id="cb30-278"><a href="#cb30-278" aria-hidden="true" tabindex="-1"></a>  <span class="at">plate_layout =</span> all_plate_layout, </span>
+<span id="cb30-279"><a href="#cb30-279" aria-hidden="true" tabindex="-1"></a>  <span class="at">sero_data =</span> sero_data_merged</span>
+<span id="cb30-280"><a href="#cb30-280" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb30-281"><a href="#cb30-281" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-282"><a href="#cb30-282" aria-hidden="true" tabindex="-1"></a>qc_results <span class="ot">&lt;-</span> <span class="fu">runQC</span>(</span>
+<span id="cb30-283"><a href="#cb30-283" aria-hidden="true" tabindex="-1"></a>  <span class="at">sero_data =</span> sero_data_merged, </span>
+<span id="cb30-284"><a href="#cb30-284" aria-hidden="true" tabindex="-1"></a>  <span class="at">plate_list =</span> plate_list_all</span>
+<span id="cb30-285"><a href="#cb30-285" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb30-286"><a href="#cb30-286" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-287"><a href="#cb30-287" aria-hidden="true" tabindex="-1"></a>mfi_to_rau_output <span class="ot">&lt;-</span> <span class="fu">MFItoRAU</span>(</span>
+<span id="cb30-288"><a href="#cb30-288" aria-hidden="true" tabindex="-1"></a>  <span class="at">sero_data =</span> sero_data_merged,</span>
+<span id="cb30-289"><a href="#cb30-289" aria-hidden="true" tabindex="-1"></a>  <span class="at">plate_list =</span> plate_list_all, </span>
+<span id="cb30-290"><a href="#cb30-290" aria-hidden="true" tabindex="-1"></a>  <span class="at">qc_results =</span> qc_results, </span>
+<span id="cb30-291"><a href="#cb30-291" aria-hidden="true" tabindex="-1"></a>  <span class="at">std_point =</span> <span class="dv">10</span></span>
+<span id="cb30-292"><a href="#cb30-292" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb30-293"><a href="#cb30-293" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-294"><a href="#cb30-294" aria-hidden="true" tabindex="-1"></a><span class="co"># etc.. </span></span>
+<span id="cb30-295"><a href="#cb30-295" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb30-296"><a href="#cb30-296" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-297"><a href="#cb30-297" aria-hidden="true" tabindex="-1"></a><span class="fu">## How can I count the number of seropositive and seronegative samples?</span></span>
+<span id="cb30-298"><a href="#cb30-298" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-299"><a href="#cb30-299" aria-hidden="true" tabindex="-1"></a>To do this, use the template code below, assuming that you have followed the steps outlined <span class="co">[</span><span class="ot">here</span><span class="co">](pvseroapp.qmd)</span>.</span>
+<span id="cb30-300"><a href="#cb30-300" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-303"><a href="#cb30-303" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb30-304"><a href="#cb30-304" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
+<span id="cb30-305"><a href="#cb30-305" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
+<span id="cb30-306"><a href="#cb30-306" aria-hidden="true" tabindex="-1"></a><span class="co">#| message: false </span></span>
+<span id="cb30-307"><a href="#cb30-307" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(SeroTrackR)</span>
+<span id="cb30-308"><a href="#cb30-308" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb30-309"><a href="#cb30-309" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-310"><a href="#cb30-310" aria-hidden="true" tabindex="-1"></a>your_raw_data <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb30-311"><a href="#cb30-311" aria-hidden="true" tabindex="-1"></a>  <span class="fu">system.file</span>(<span class="st">"extdata"</span>, <span class="st">"example_MAGPIX_plate1.csv"</span>, <span class="at">package =</span> <span class="st">"SeroTrackR"</span>),</span>
+<span id="cb30-312"><a href="#cb30-312" aria-hidden="true" tabindex="-1"></a>  <span class="fu">system.file</span>(<span class="st">"extdata"</span>, <span class="st">"example_MAGPIX_plate2.csv"</span>, <span class="at">package =</span> <span class="st">"SeroTrackR"</span>), </span>
+<span id="cb30-313"><a href="#cb30-313" aria-hidden="true" tabindex="-1"></a>  <span class="fu">system.file</span>(<span class="st">"extdata"</span>, <span class="st">"example_MAGPIX_plate3.csv"</span>, <span class="at">package =</span> <span class="st">"SeroTrackR"</span>)</span>
+<span id="cb30-314"><a href="#cb30-314" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb30-315"><a href="#cb30-315" aria-hidden="true" tabindex="-1"></a>your_plate_layout <span class="ot">&lt;-</span> <span class="fu">system.file</span>(<span class="st">"extdata"</span>, <span class="st">"example_platelayout_1.xlsx"</span>, <span class="at">package =</span> <span class="st">"SeroTrackR"</span>)</span>
+<span id="cb30-316"><a href="#cb30-316" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-317"><a href="#cb30-317" aria-hidden="true" tabindex="-1"></a>magpix_sero_data <span class="ot">&lt;-</span> <span class="fu">readSeroData</span>(</span>
+<span id="cb30-318"><a href="#cb30-318" aria-hidden="true" tabindex="-1"></a>  <span class="at">raw_data =</span> your_raw_data,</span>
+<span id="cb30-319"><a href="#cb30-319" aria-hidden="true" tabindex="-1"></a>  <span class="at">platform =</span> <span class="st">"magpix"</span>, </span>
+<span id="cb30-320"><a href="#cb30-320" aria-hidden="true" tabindex="-1"></a>  <span class="at">version =</span> <span class="st">"4.2"</span></span>
+<span id="cb30-321"><a href="#cb30-321" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb30-322"><a href="#cb30-322" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-323"><a href="#cb30-323" aria-hidden="true" tabindex="-1"></a>plate_list_all  <span class="ot">&lt;-</span> <span class="fu">readPlateLayout</span>(</span>
+<span id="cb30-324"><a href="#cb30-324" aria-hidden="true" tabindex="-1"></a>  <span class="at">plate_layout =</span> your_plate_layout, </span>
+<span id="cb30-325"><a href="#cb30-325" aria-hidden="true" tabindex="-1"></a>  <span class="at">sero_data =</span> magpix_sero_data</span>
+<span id="cb30-326"><a href="#cb30-326" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb30-327"><a href="#cb30-327" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-328"><a href="#cb30-328" aria-hidden="true" tabindex="-1"></a>qc_results <span class="ot">&lt;-</span> <span class="fu">runQC</span>(</span>
+<span id="cb30-329"><a href="#cb30-329" aria-hidden="true" tabindex="-1"></a>  <span class="at">sero_data =</span> magpix_sero_data, </span>
+<span id="cb30-330"><a href="#cb30-330" aria-hidden="true" tabindex="-1"></a>  <span class="at">plate_list =</span> plate_list_all</span>
+<span id="cb30-331"><a href="#cb30-331" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb30-332"><a href="#cb30-332" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-333"><a href="#cb30-333" aria-hidden="true" tabindex="-1"></a>mfi_to_rau_output <span class="ot">&lt;-</span> <span class="fu">MFItoRAU</span>(</span>
+<span id="cb30-334"><a href="#cb30-334" aria-hidden="true" tabindex="-1"></a>  <span class="at">sero_data =</span> magpix_sero_data,</span>
+<span id="cb30-335"><a href="#cb30-335" aria-hidden="true" tabindex="-1"></a>  <span class="at">plate_list =</span> plate_list_all, </span>
+<span id="cb30-336"><a href="#cb30-336" aria-hidden="true" tabindex="-1"></a>  <span class="at">qc_results =</span> qc_results, </span>
+<span id="cb30-337"><a href="#cb30-337" aria-hidden="true" tabindex="-1"></a>  <span class="at">std_point =</span> <span class="dv">10</span></span>
+<span id="cb30-338"><a href="#cb30-338" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb30-339"><a href="#cb30-339" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-340"><a href="#cb30-340" aria-hidden="true" tabindex="-1"></a>classifyResults_output <span class="ot">&lt;-</span> <span class="fu">classifyResults</span>(</span>
+<span id="cb30-341"><a href="#cb30-341" aria-hidden="true" tabindex="-1"></a>  mfi_to_rau_output, </span>
+<span id="cb30-342"><a href="#cb30-342" aria-hidden="true" tabindex="-1"></a>  <span class="at">algorithm_type =</span> <span class="st">"antibody_model"</span>, </span>
+<span id="cb30-343"><a href="#cb30-343" aria-hidden="true" tabindex="-1"></a>  <span class="at">sens_spec =</span> <span class="st">"balanced"</span>, </span>
+<span id="cb30-344"><a href="#cb30-344" aria-hidden="true" tabindex="-1"></a>  qc_results</span>
+<span id="cb30-345"><a href="#cb30-345" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb30-346"><a href="#cb30-346" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb30-347"><a href="#cb30-347" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-350"><a href="#cb30-350" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb30-351"><a href="#cb30-351" aria-hidden="true" tabindex="-1"></a>classifyResults_output <span class="sc">%&gt;%</span> </span>
+<span id="cb30-352"><a href="#cb30-352" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(pred_class_max)</span>
+<span id="cb30-353"><a href="#cb30-353" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb30-354"><a href="#cb30-354" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-355"><a href="#cb30-355" aria-hidden="true" tabindex="-1"></a>To calculate the serostatus PER PLATE: </span>
+<span id="cb30-356"><a href="#cb30-356" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-359"><a href="#cb30-359" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb30-360"><a href="#cb30-360" aria-hidden="true" tabindex="-1"></a>classifyResults_output <span class="sc">%&gt;%</span> </span>
+<span id="cb30-361"><a href="#cb30-361" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(Plate, pred_class_max)</span>
+<span id="cb30-362"><a href="#cb30-362" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb30-363"><a href="#cb30-363" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-364"><a href="#cb30-364" aria-hidden="true" tabindex="-1"></a>To calculate the **percentage** of the serostatus per plate: </span>
+<span id="cb30-365"><a href="#cb30-365" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-368"><a href="#cb30-368" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb30-369"><a href="#cb30-369" aria-hidden="true" tabindex="-1"></a>classifyResults_output <span class="sc">%&gt;%</span> </span>
+<span id="cb30-370"><a href="#cb30-370" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(Plate, pred_class_max) <span class="sc">%&gt;%</span> </span>
+<span id="cb30-371"><a href="#cb30-371" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Plate) <span class="sc">%&gt;%</span> </span>
+<span id="cb30-372"><a href="#cb30-372" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Percent =</span> <span class="fu">round</span>(<span class="dv">100</span> <span class="sc">*</span> n <span class="sc">/</span> <span class="fu">sum</span>(n), <span class="dv">1</span>))</span>
+<span id="cb30-373"><a href="#cb30-373" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb30-374"><a href="#cb30-374" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-375"><a href="#cb30-375" aria-hidden="true" tabindex="-1"></a>You can do some clever data wrangling to make the table look like this: </span>
+<span id="cb30-376"><a href="#cb30-376" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-379"><a href="#cb30-379" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb30-380"><a href="#cb30-380" aria-hidden="true" tabindex="-1"></a>classifyResults_output <span class="sc">%&gt;%</span> </span>
+<span id="cb30-381"><a href="#cb30-381" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Count our serostatus by plate </span></span>
+<span id="cb30-382"><a href="#cb30-382" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(Plate, pred_class_max) <span class="sc">%&gt;%</span> </span>
+<span id="cb30-383"><a href="#cb30-383" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Plate) <span class="sc">%&gt;%</span> </span>
+<span id="cb30-384"><a href="#cb30-384" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb30-385"><a href="#cb30-385" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Calculate serostatus prevalence for each plate as a percentage </span></span>
+<span id="cb30-386"><a href="#cb30-386" aria-hidden="true" tabindex="-1"></a>    <span class="at">Percent =</span> <span class="fu">round</span>(<span class="dv">100</span> <span class="sc">*</span> n <span class="sc">/</span> <span class="fu">sum</span>(n), <span class="dv">1</span>),</span>
+<span id="cb30-387"><a href="#cb30-387" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Create new variable "Count" to make it easier to interpret </span></span>
+<span id="cb30-388"><a href="#cb30-388" aria-hidden="true" tabindex="-1"></a>    <span class="at">Count =</span> <span class="fu">paste0</span>(n, <span class="st">" ("</span>, Percent, <span class="st">"%)"</span>)</span>
+<span id="cb30-389"><a href="#cb30-389" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
+<span id="cb30-390"><a href="#cb30-390" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Remove the "Percent" and "n" columns as they are unnecessary now </span></span>
+<span id="cb30-391"><a href="#cb30-391" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="sc">-</span><span class="fu">c</span>(Percent, n)) <span class="sc">%&gt;%</span> </span>
+<span id="cb30-392"><a href="#cb30-392" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Create cleaner table to view each serostatus type as a column </span></span>
+<span id="cb30-393"><a href="#cb30-393" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(</span>
+<span id="cb30-394"><a href="#cb30-394" aria-hidden="true" tabindex="-1"></a>    <span class="at">id_cols =</span> Plate,</span>
+<span id="cb30-395"><a href="#cb30-395" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_from =</span> pred_class_max, </span>
+<span id="cb30-396"><a href="#cb30-396" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_from =</span> Count</span>
+<span id="cb30-397"><a href="#cb30-397" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb30-398"><a href="#cb30-398" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 </code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
