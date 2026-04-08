@@ -251,16 +251,109 @@ plate_list_all  <- readPlateLayout(
 
 qc_results <- runQC(
   sero_data = sero_data_merged, 
-  plate_list = all_plate_layout
+  plate_list = plate_list_all
 )
 
 mfi_to_rau_output <- MFItoRAU(
   sero_data = sero_data_merged,
-  plate_list = all_plate_layout, 
+  plate_list = plate_list_all, 
   qc_results = qc_results, 
   std_point = 10
 )
 
 # etc.. 
+```
+
+## How can I count the number of seropositive and seronegative samples?
+
+To do this, use the template code below, assuming that you have followed the steps outlined [here](pvseroapp.qmd).
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false 
+library(SeroTrackR)
+library(tidyverse)
+
+your_raw_data <- c(
+  system.file("extdata", "example_MAGPIX_plate1.csv", package = "SeroTrackR"),
+  system.file("extdata", "example_MAGPIX_plate2.csv", package = "SeroTrackR"), 
+  system.file("extdata", "example_MAGPIX_plate3.csv", package = "SeroTrackR")
+)
+your_plate_layout <- system.file("extdata", "example_platelayout_1.xlsx", package = "SeroTrackR")
+
+magpix_sero_data <- readSeroData(
+  raw_data = your_raw_data,
+  platform = "magpix", 
+  version = "4.2"
+)
+
+plate_list_all  <- readPlateLayout(
+  plate_layout = your_plate_layout, 
+  sero_data = magpix_sero_data
+)
+
+qc_results <- runQC(
+  sero_data = magpix_sero_data, 
+  plate_list = plate_list_all
+)
+
+mfi_to_rau_output <- MFItoRAU(
+  sero_data = magpix_sero_data,
+  plate_list = plate_list_all, 
+  qc_results = qc_results, 
+  std_point = 10
+)
+
+classifyResults_output <- classifyResults(
+  mfi_to_rau_output, 
+  algorithm_type = "antibody_model", 
+  sens_spec = "balanced", 
+  qc_results
+)
+```
+
+```{r}
+classifyResults_output %>% 
+  count(pred_class_max)
+```
+
+To calculate the serostatus PER PLATE: 
+
+```{r}
+classifyResults_output %>% 
+  count(Plate, pred_class_max)
+```
+
+To calculate the **percentage** of the serostatus per plate: 
+
+```{r}
+classifyResults_output %>% 
+  count(Plate, pred_class_max) %>% 
+  group_by(Plate) %>% 
+  mutate(Percent = round(100 * n / sum(n), 1))
+```
+
+You can do some clever data wrangling to make the table look like this: 
+
+```{r}
+classifyResults_output %>% 
+  # Count our serostatus by plate 
+  count(Plate, pred_class_max) %>% 
+  group_by(Plate) %>% 
+  mutate(
+    # Calculate serostatus prevalence for each plate as a percentage 
+    Percent = round(100 * n / sum(n), 1),
+    # Create new variable "Count" to make it easier to interpret 
+    Count = paste0(n, " (", Percent, "%)")
+  ) %>% 
+  # Remove the "Percent" and "n" columns as they are unnecessary now 
+  dplyr::select(-c(Percent, n)) %>% 
+  # Create cleaner table to view each serostatus type as a column 
+  pivot_wider(
+    id_cols = Plate,
+    names_from = pred_class_max, 
+    values_from = Count
+  )
 ```
 

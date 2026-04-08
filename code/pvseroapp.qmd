@@ -110,7 +110,7 @@ iwalk(sero_data, function(df, nm) {
 #### readSeroData Output
 This exports a list of data frames: 
 
-1. `raw`: The raw, unedited files: A check that the correct file/s were added.
+1. `data_raw`: The raw, unedited files: A check that the correct file/s were added.
 2. `results`: The processed serological data files: Antigen names compatible with the R package, clear columns for each antigen and their MFI results.
 3. `counts`: The bead counts detected from the Luminex instrument per antigen, per sample, for each plate. 
 4. `blanks`: The MFI results for the blank wells. 

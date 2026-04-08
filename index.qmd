@@ -20,10 +20,10 @@ You can download the R package using the following:
 #| exec: false
 #| eval: false
 # Run once to configure your package to use and deploy SeroTrackR
-if(!require(devtools)){
-  install.packages("devtools") # If not already installed
+if(!require(pak)){
+  install.packages("pak") # If not already installed
 } 
-devtools::install_github("dionnecargy/SeroTrackR")
+pak::pak("dionnecargy/SeroTrackR")
 library(SeroTrackR)
 ```
 
