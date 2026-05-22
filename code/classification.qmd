@@ -51,7 +51,7 @@ table1 %>%
 
 This work develops a sero-diagnostic test to balance the selection of serological exposure markers that are associated with high classification performance, with the selection of proteins that are easier to manufacture and are more stable.
 
-(#tbl-table2) outlines the top eight P. vivax proteins selected in the model (discussed further below in the random forest classification methods), their associated lifecycle stage and description of the proteins and expression system.
+(#tbl-table2) outlines the top eight *P. vivax* proteins selected in the model (discussed further below in the random forest classification methods), their associated lifecycle stage and description of the proteins and expression system.
 
 ```{r table 2}
 #| echo: false 
@@ -115,11 +115,7 @@ The `classifyResults()` function classifies samples as recently exposed within t
 
 ## Which algorithm do I choose?
 
-The `algorithm_type` chosen can be **"antibody_model"** or **"antibody_model_excLF016"**. 
-
-**antibody_model**: PvSeroApp Algorithm: The PvSeroApp Model contains all top 8 antigens. 
-
-**antibody_model_excLF016**: As the name suggests, this model contains the antigens in PvSeroApp except for LF016. 
+The `algorithm_type` is only **"antibody_model"**, which is also written by default. 
 
 ## Sensitivity and Specificity 
 
@@ -140,18 +136,10 @@ The `algorithm_type` chosen can be **"antibody_model"** or **"antibody_model_exc
 We have provided multiple options for you to choose which classification you would like to run. The `sens_spec` can be: 
 
 - "balanced" (default)
-- "85% sensitivity"
-- "90% sensitivity"
-- "95% sensitivity"
-- "85% specificity"
 - "90% specificity"
-- "95% specificity"
-
 
 ### Which sensitivity/specificity threshold do I use? 
 The **balanced** sensitivity / specificity is when both metrics are at their highest and correspond to 81% each. 
-
-**High sensitivity with lower specificity** maximises the identification and treatment of all likely hypnozoite carriers at the cost of some over-treatment. As radical cure carries a risk of haemolysis in G6PD-deficient individuals10 and G6PD screening can add a substantial burden to healthcare costs, operational use of a high-sensitivity, low-specificity approach is unlikely. 
 
 **High specificity with lower sensitivity** is suited for surveillance settings and aims to correctly identify non-carriers and minimise treatment of uninfected individual, while the impact of false negatives can be mitigated by increasing survey size. 
 
@@ -210,7 +198,7 @@ You can also visualise the classification results across multiple sensitivity/sp
 
 ```{r}
 # Sensitivity/specificity thresholds of interest
-sens_spec_all <- c("balanced", "90% sensitivity", "90% specificity")
+sens_spec_all <- c("balanced", "90% specificity")
 
 # Classify results across all thresholds
 all_classifications <- purrr::map_dfr(sens_spec_all, ~{
@@ -228,7 +216,7 @@ all_classifications <- purrr::map_dfr(sens_spec_all, ~{
 plotBoxPlotClassification(all_classifications, "balanced")
 ```
 
-Here are the results of all classification thresholds explored in the PvSeroApp: balanced, 90% sensitivity and 90% specificity. The N's for the random forest model classifications based on these classifications are displayed.
+Here are the results of all classification thresholds explored in the PvSeroApp: balanced and 90% specificity. The N's for the random forest model classifications based on these classifications are displayed.
 
 ## Customisations
 

@@ -347,18 +347,11 @@ The `classifyResults()` function classifies samples as recently exposed within t
 The `sens_spec` can be: 
 
 - "balanced" (default)
-- "85% sensitivity"
-- "90% sensitivity"
-- "95% sensitivity"
-- "85% specificity"
 - "90% specificity"
-- "95% specificity"
 
 :::{.callout-tip}
 #### Which sensitivity/specificity threshold do I use? 
 The **balanced** sensitivity / specificity is when both metrics are at their highest and correspond to 81% each. 
-
-**High sensitivity with lower specificity** maximises the identification and treatment of all likely hypnozoite carriers at the cost of some over-treatment. As radical cure carries a risk of haemolysis in G6PD-deficient individuals10 and G6PD screening can add a substantial burden to healthcare costs, operational use of a high-sensitivity, low-specificity approach is unlikely. 
 
 **High specificity with lower sensitivity** is suited for surveillance settings and aims to correctly identify non-carriers and minimise treatment of uninfected individual, while the impact of false negatives can be mitigated by increasing survey size. 
 :::
