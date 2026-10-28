@@ -14,7 +14,7 @@
     "href": "index.html#vivax-serology-partnership",
     "title": "Serological Data Analysis",
     "section": "Vivax Serology Partnership",
-    "text": "Vivax Serology Partnership\nA global partnership between academia, biotechnology industry research and development, non-governmental organisations, policy and implementation stakeholder to address a major gap in the diagnosis of Plasmodium viavx infections and accelerate towards elimination.\nFor more information see the VISPA website.",
+    "text": "Vivax Serology Partnership\nA global partnership between academia, biotechnology industry research and development, non-governmental organisations, policy and implementation stakeholders to address a major gap in the diagnosis of Plasmodium vivax infections and accelerate towards elimination.\nFor more information see the VISPA website.",
     "crumbs": [
       "Preface"
     ]
@@ -24,7 +24,7 @@
     "href": "index.html#purpose-of-this-book",
     "title": "Serological Data Analysis",
     "section": "Purpose of This Book",
-    "text": "Purpose of This Book\nThis book aims to provide a step-by-step tutorial on how to analyse serology data, with a particular focus on our Plasmodium vivax serology test and treat (PvSeroTAT) strategy.",
+    "text": "Purpose of This Book\nThis book aims to provide a step-by-step tutorial on how to analyse serology data, with a particular focus on our Plasmodium vivax serology test and treat (PvSeroTAT) strategy. It also covers pathogen-agnostic workflows for users applying {SeroTrackR} to other serology data.",
     "crumbs": [
       "Preface"
     ]
@@ -34,7 +34,17 @@
     "href": "index.html#serotrackr",
     "title": "Serological Data Analysis",
     "section": "SeroTrackR",
-    "text": "SeroTrackR\n{SeroTrackR} is a tool to for serology data analysis and visualisation, and for the application of the machine learning algorithms implemented in the {PvSeroApp}. The R package is intended to give users more flexibility in assessing serology data and manipulate data visualisations to the user’s interest. You can download the R package using the following:\n\n# Run once to configure your package to use and deploy SeroTrackR\nif(!require(pak)){\n  install.packages(\"pak\") # If not already installed\n} \npak::pak(\"dionnecargy/SeroTrackR\")\nlibrary(SeroTrackR)\n\nAlternatively you can download the package from the {remotes} R package:\n\nif(!require(remotes)){\n  install.packages(\"remotes\") # If not already installed\n} \nlibrary(remotes)\nremotes::install_github(\"dionnecargy/SeroTrackR\")",
+    "text": "SeroTrackR\n{SeroTrackR} is a tool for serology data analysis and visualisation, and for the application of the machine learning algorithms implemented in the {PvSeroApp}. The R package is intended to give users more flexibility in assessing serology data and manipulate data visualisations to the user’s interest.\nFunction reference documentation and vignettes are available on the pkgdown site.\nYou can install the R package from CRAN:\n\ninstall.packages(\"SeroTrackR\")\nlibrary(SeroTrackR)\n\nAlternatively you can install the development version from GitHub using the {pak} R package:\n\nif(!require(pak)){\n  install.packages(\"pak\") # If not already installed\n} \npak::pak(\"dionnecargy/SeroTrackR\")\nlibrary(SeroTrackR)\n\nNote that the GitHub (development) version bundles the trained classification model file locally, whereas the CRAN version downloads it at runtime, so the CRAN version requires an internet connection the first time functions such as classifyResults() are called.",
+    "crumbs": [
+      "Preface"
+    ]
+  },
+  {
+    "objectID": "index.html#citing-this-work",
+    "href": "index.html#citing-this-work",
+    "title": "Serological Data Analysis",
+    "section": "Citing This Work",
+    "text": "Citing This Work\nIf you use this book or {SeroTrackR} in your work, please cite both:\n\nArgyropoulos D, Conway E, Bourke C, Li-Wai-Suen C, Ruybal-Pesántez S, Smith L, Mueller I, Longley R. PvSeroApp and SeroTrackR: An automated pipeline for Plasmodium vivax malaria serological analyses and machine learning classification of recent exposure. VeriXiv 2026; 3:313. https://verixiv.org/articles/3-313/v2\nSeroTrackR R package (CRAN): https://doi.org/10.32614/CRAN.package.SeroTrackR",
     "crumbs": [
       "Preface"
     ]
@@ -361,7 +371,7 @@
     "href": "code/classification.html#customisations",
     "title": "7  Classification",
     "section": "7.5 Customisations",
-    "text": "7.5 Customisations\nFor more customisations on how to manipulate your ggplot2 see the manual here or the book (Wickham 2016).\n\n\n\n\n\n\nLongley, Rhea J., Michael T. White, Eizo Takashima, Jessica Brewster, Masayuki Morita, Matthias Harbers, Thomas Obadia, et al. 2020. “Development and Validation of Serological Markers for Detecting Recent Plasmodium Vivax Infection.” Nature Medicine 26 (5): 741–49. https://doi.org/10.1038/s41591-020-0841-4.\n\n\nWickham, Hadley. 2016. Ggplot2: Elegant Graphics for Data Analysis. Springer-Verlag New York. https://ggplot2.tidyverse.org.",
+    "text": "7.5 Customisations\nFor more customisations on how to manipulate your ggplot2 see the manual here or the book (Wickham 2016).\n\n\n\n\n\n\nLongley, Rhea J., Michael T. White, Eizo Takashima, et al. 2020. “Development and Validation of Serological Markers for Detecting Recent Plasmodium Vivax Infection.” Nature Medicine 26 (5): 741–49. https://doi.org/10.1038/s41591-020-0841-4.\n\n\nWickham, Hadley. 2016. Ggplot2: Elegant Graphics for Data Analysis. Springer-Verlag New York. https://ggplot2.tidyverse.org.",
     "crumbs": [
       "Data Exploration",
       "<span class='chapter-number'>7</span>  <span class='chapter-title'>Classification</span>"
@@ -460,7 +470,7 @@
     "href": "code/references.html",
     "title": "Appendix B — References",
     "section": "",
-    "text": "Longley, Rhea J., Michael T. White, Eizo Takashima, Jessica Brewster,\nMasayuki Morita, Matthias Harbers, Thomas Obadia, et al. 2020.\n“Development and Validation of Serological Markers for Detecting\nRecent Plasmodium Vivax Infection.” Nature Medicine 26\n(5): 741–49. https://doi.org/10.1038/s41591-020-0841-4.\n\n\nWickham, Hadley. 2016. Ggplot2: Elegant Graphics for Data\nAnalysis. Springer-Verlag New York. https://ggplot2.tidyverse.org.",
+    "text": "Longley, Rhea J., Michael T. White, Eizo Takashima, et al. 2020.\n“Development and Validation of Serological Markers for Detecting\nRecent Plasmodium Vivax Infection.” Nature Medicine 26\n(5): 741–49. https://doi.org/10.1038/s41591-020-0841-4.\n\n\nWickham, Hadley. 2016. Ggplot2: Elegant Graphics for Data\nAnalysis. Springer-Verlag New York. https://ggplot2.tidyverse.org.",
     "crumbs": [
       "Appendices",
       "<span class='chapter-number'>B</span>  <span class='chapter-title'>References</span>"
