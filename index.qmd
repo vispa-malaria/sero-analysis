@@ -42,6 +42,7 @@ Note that the GitHub (development) version bundles the trained classification mo
 If you use this book or `{SeroTrackR}` in your work, please cite **both**:
 
 > Argyropoulos D, Conway E, Bourke C, Li-Wai-Suen C, Ruybal-Pesántez S, Smith L, Mueller I, Longley R. *PvSeroApp and SeroTrackR: An automated pipeline for Plasmodium vivax malaria serological analyses and machine learning classification of recent exposure.* VeriXiv 2026; 3:313. <https://verixiv.org/articles/3-313/v2>
+
 > `SeroTrackR` R package (CRAN): <https://doi.org/10.32614/CRAN.package.SeroTrackR>
 
 If you are using the `{PvSeroApp}` in your work, please cite: 
